@@ -20,6 +20,12 @@ class SparseMatrix
 
       this->linhas = linhas;
       this->colunas = colunas;
+
+      for (int i = 0; i < ; i++)
+      {
+        /* code */
+      }
+      
     }
 };
 
