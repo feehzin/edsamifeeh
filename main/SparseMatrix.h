@@ -2,6 +2,7 @@
 #define SPARSEMATRIX_H
 #include <iostream>
 #include "Node.h"
+#include <stdexcept> // Biblioteca para lançar exceções
 
 /**Funções obrigatorias da classe SparseMatrix:
  * Construtor
@@ -11,9 +12,11 @@
  * Impressão
  */
 
+// Classe que respresenta a matriz esparsa
 class SparseMatrix {
   private:
-    Node* m_head; // Nó sentinela
+    Node* m_head_linha; // Nó sentinela da linha
+    Node* m_head_coluna; // Nó sentinela da coluna
     int linhas; // Número de linhas
     int colunas; // Número de colunas
 
@@ -21,40 +24,44 @@ class SparseMatrix {
     //Construtor
     SparseMatrix(int linhas, int colunas)
     {
+      Node* mat;
+
       if(linhas <= 0 || colunas <= 0)
       {
         throw std::out_of_range("Numero de linhas e/ou colunas invalidas");
       }
 
-      this->linhas = linhas;
-      this->colunas = colunas;
+      mat->linhas = linhas;
+      mat->colunas = colunas;
 
-      for (int i = 0; i < ; i++)
-      {
-        /* code */
-      }
-
-      /Destrutor (libera memória)/ 
-      ~SparsaMatrix(){ oiii
-
-      }
-       
-      /Função que insere um valor na matriz esparsa/ 
-      void insert(int i, int j, double value){
-
-      }
-
-      /Retorna um valor da matriz/ 
-      double get(int i, int j){
-
-      }
-
-      /Exibe a matriz no terminal/ 
-      void print(){
-
-      }
       
     }
+
+    //Destrutor (libera memória)
+    ~SparseMatrix() 
+    { 
+
+    }
+       
+    //Função que insere um valor na matriz esparsa
+    void insert(int i, int j, double value)
+    {
+
+    }
+
+    //Retorna um valor da matriz
+    double get(int i, int j)
+    {
+
+    }
+
+    //Exibe a matriz no terminal
+    void print()
+    {
+
+    }
+      
+    
 };
 
 #endif
