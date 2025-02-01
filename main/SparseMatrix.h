@@ -3,12 +3,20 @@
 #include <iostream>
 #include "Node.h"
 
-class SparseMatrix
-{
+/**Funções obrigatorias da classe SparseMatrix:
+ * Construtor
+ * Destrutor
+ * Inserção de elementos
+ * Obter valor
+ * Impressão
+ */
+
+class SparseMatrix {
   private:
-    Node* m_head; //nó sentinela
-    int linhas; //número de linhas
-    int colunas; //números de colunas
+    Node* m_head; // Nó sentinela
+    int linhas; // Número de linhas
+    int colunas; // Número de colunas
+
   public:
     //Construtor
     SparseMatrix(int linhas, int colunas)
@@ -24,6 +32,26 @@ class SparseMatrix
       for (int i = 0; i < ; i++)
       {
         /* code */
+      }
+
+      /Destrutor (libera memória)/ 
+      ~SparsaMatrix(){ oiii
+
+      }
+       
+      /Função que insere um valor na matriz esparsa/ 
+      void insert(int i, int j, double value){
+
+      }
+
+      /Retorna um valor da matriz/ 
+      double get(int i, int j){
+
+      }
+
+      /Exibe a matriz no terminal/ 
+      void print(){
+
       }
       
     }
