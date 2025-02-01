@@ -10,8 +10,9 @@ struct Node
   int colunas; // Posição do elemento da matriz esparsa
   double valor; // Valor da matriz armazenado no nó (valor não nulo)
 
- /*Construtor que inicializa um nó com valores específicos
-  Direita e abaixo recebem ele mesmos(this), apontando para o próprio nó (indicando que, inicialmente, forma-se uma lista circular para ele mesmo)*/
+  /*Construtor que inicializa um nó com valores específicos
+  Direita e abaixo recebem ele mesmos(this), apontando para o próprio nó 
+  (indicando que, inicialmente, forma-se uma lista circular para ele mesmo)*/
   Node(int linhas, int colunas, double valor)
     : direita{this}, abaixo{this}, linhas{linhas}, colunas{colunas}, valor{valor} {}
 };

@@ -15,31 +15,39 @@
 // Classe que respresenta a matriz esparsa
 class SparseMatrix {
   private:
-    Node* m_head_linha; // Nó sentinela da linha
-    Node* m_head_coluna; // Nó sentinela da coluna
-    int linhas; // Número de linhas
-    int colunas; // Número de colunas
+    Node* m_head; // Nó sentinela
+    int linhas, colunas; // Dimensões da matriz esparsa
 
   public:
-    //Construtor
+    //Construtor (cria uma matriz vazia)
     SparseMatrix(int linhas, int colunas)
     {
-      Node* mat;
-
       if(linhas <= 0 || colunas <= 0)
       {
         throw std::out_of_range("Numero de linhas e/ou colunas invalidas");
       }
 
-      mat->linhas = linhas;
-      mat->colunas = colunas;
+      this->linhas = linhas;
+      this->colunas = colunas;
 
+      m_head = (Node *)malloc(sizeof(Node));
+      if (m_head == nullptr)
+      {
+        throw std::out_of_range("Erro ao alocar memoria");
+      }
       
+      m_head = new Node(0, 0, 0);
+      m_head->direita = m_head; //aponta para si mesmo
+      m_head->abaixo = m_head; //aponta para si mesmo
     }
 
     //Destrutor (libera memória)
-    ~SparseMatrix() 
-    { 
+    ~SparseMatrix() {
+      if(!m_head) {
+        throw std::out_of_range("Lista vazia");
+      } 
+      Node*  aux = m_head->next // O ponteiro aux recebe o ponteiro cabeça da matriz esparsa
+
 
     }
        
