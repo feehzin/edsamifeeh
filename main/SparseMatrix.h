@@ -106,12 +106,20 @@ class SparseMatrix {
 
     // Percorre a linha ate achhar a coluna desejada ou passar por ela
     while(atual != atual_c && atual->colunas < j){ // O loop avança pelas colunas ate achar a posição de j ou passar por ela  
-      anterior = atual;
-      atual = atual->direita
+      anterior = atual; // Atualiza o ponteiro anterior para manter a referencia do nó anterior na linha
+      atual = atual->direita; //Move para a proxima coluna 
     }
-    
 
+    // Verifica se o elemento já existe na posição i e j
+    if(atual != atual_c && atual->colunas  == j){
+      atual->valor = value; // Se já existe, atualiza o valor
+      return;
+    }
 
+    // Se o elemeento não existe, se cria um novo nó para guardar o valor
+    Node* novoNode = new Node(i, j, value); // Cria um nó novo com os valores fornecidos
+    novoNode->direita = atual; // O novo nó aponta para o proximo elemento na linha
+    anterior->direita = novoNode; // O nó anterior aponta para o novo nó , inoserindo ele corretamente
     }
     
     //Retorna um valor da matriz
