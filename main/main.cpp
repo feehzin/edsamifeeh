@@ -6,9 +6,7 @@
 #include "SparseMatrix.h"
 using namespace std;
 
-int main()
-{
-  void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
+void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
   {
     ifstream arquivo;
 
@@ -23,7 +21,7 @@ int main()
     int linhas, colunas;
     arquivo >> linhas >> colunas;
 
-    if (linhas != m.getLinhas || colunas != m.getColunas)
+    if (linhas != m.getLinhas() || colunas != m.getColunas())
     {
       cerr << "Erro: dimensoes do arquivo nao correspodem a matriz dada" << endl; //o uso de cerr é para mensagens de erro
       arquivo.close();
@@ -53,11 +51,12 @@ int main()
   }
   
   /**Função que soma matrizes esparsas */
-  SparseMatrix sum(SparseMatrix& A, SparseMatrix& B){
+  SparseMatrix sum(SparseMatrix& A, SparseMatrix& B) {
     // Verificar se as matrizes são da mesma dimensão(tamanho)
-    if(A.linhas != B.linas || A.colunar != B.colunas){
-      throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.")
+    if(A.getLinhas() != B.getLinhas()|| A.getColunas()!= B.getColunas()){
+      throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
     }
+    
     SparseMatrix C(A.getLinhas(), A.getColunas());
 
     // Ponteiros para percorrer as linhas das matrizes A e B
@@ -65,19 +64,23 @@ int main()
     Node* linha_B = B.m_head->abaixo; // Começa na primeira linha de B
 
     // Percorre as linhas das matrizes ate que as duas tenham sido completamente revistadas
-    while(linha_A != A.m_head-> || linha_B != B.m_head) {
+    whilee(linha_A != A.m_head-> || linha_B != B.m_head) {
       
     }
-
-
-
-
 
   }
 
   // Matriz criada para guardar o resultado da soma        
   SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B) {
-
+    if(A.getLinhas() != B.getLinhas()|| A.getColunas()!= B.getColunas()){
+      throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
+    }
+    SparseMatrix C(A.getLinhas(), A.getColunas());
+    
   }
+
+int main()
+{
+  
 
 }

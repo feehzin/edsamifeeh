@@ -27,10 +27,9 @@ class SparseMatrix {
         throw std::out_of_range("Numero de linhas e/ou colunas invalidas.");
       }
 
+      m_head = new Node(0, 0, 0);
       m_head->linhas = m;
       m_head->colunas = n;
-      
-      m_head = new Node(0, 0, 0);
       
       if (m_head == nullptr)
       {
@@ -64,7 +63,7 @@ class SparseMatrix {
       //percorre as linhas da matriz
       while(atual_c != m_head) {
       
-        Node* atual_l = m_head->direita;
+        Node* atual_l = atual_c->direita;
 
         //percorre até retornar para o início da linha
         while (atual_l != atual_c)
@@ -91,7 +90,7 @@ class SparseMatrix {
       throw std::out_of_range("Valor invalido.");
       }
       
-      if(i < 0 || i > linhas || j < 0 || j > colunas){ 
+      if(i < 1 || i > linhas || j < 1 || j > colunas){ 
         // Impede que os indices acessados sejam negativos ou indices que a matriz nao suporta 
       throw std::out_of_range("Indices invalidos.");
     }
@@ -139,7 +138,7 @@ class SparseMatrix {
     {
       //verifica se os índices são válidos
       //senão, lança uma exceção
-      if (i < 0 || i > linhas || j < 0 || j > colunas)
+      if (i < 1 || i > linhas || j < 1 || j > colunas)
       {
         throw std::out_of_range("Indice(s) invalido(s).");
       }
@@ -186,7 +185,7 @@ class SparseMatrix {
     {
       for (int i = 1; i <= linhas; i++)
       {
-        for (int j = 1; i <= colunas; i++)
+        for (int j = 1; j <= colunas; j++)
         {
           double valor = get(i, j);
           std::cout << valor << " ";
