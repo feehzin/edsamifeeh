@@ -27,8 +27,8 @@ class SparseMatrix {
         throw std::out_of_range("Numero de linhas e/ou colunas invalidas");
       }
 
-      this->linhas = linhas;
-      this->colunas = colunas;
+      m_head->linhas = linhas;
+      m_head->colunas = colunas;
 
       m_head = (Node *)malloc(sizeof(Node));
       if (m_head == nullptr)
@@ -41,14 +41,36 @@ class SparseMatrix {
       m_head->abaixo = m_head; //aponta para si mesmo
     }
 
-    //Destrutor (libera memória)
+    //Destrutor: libera a memória alocada
     ~SparseMatrix() {
       if(!m_head) {
         throw std::out_of_range("Lista vazia");
       } 
-      Node*  aux = m_head->next // O ponteiro aux recebe o ponteiro cabeça da matriz esparsa
 
+      Node* atual_c = m_head->abaixo; //recebe a primeira linha
+      Node* aux_c; //nó auxiliar
 
+      //percorre as linhas da matriz
+      while(atual_c != m_head) {
+      
+        Node* atual_l = m_head->direita;
+        Node* aux_l;
+
+        //percorre até retornar para o início da linha
+        while (atual_l != atual_c)
+        {
+          aux_l = atual_l->direita; //guarda o prócimo nó antes de deletá-lo
+          delete atual_l;
+          atual_l = aux_l; //atual_l avança para o próximo nó
+        }
+
+        aux_c = atual_c->abaixo; //guarda a próxima linha antes de deletar o atual
+        delete atual_c; // deleta o nó da coluna
+        atual_c = aux_c; //avança para a próxima coluna
+      }
+
+      delete m_head;
+      m_head = nullptr;
     }
        
     //Função que insere um valor na matriz esparsa
