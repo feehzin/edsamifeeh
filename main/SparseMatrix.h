@@ -30,7 +30,7 @@ class SparseMatrix {
       m_head->linhas = m;
       m_head->colunas = n;
       
-      m_head = new Node(-1, -1, 0);
+      m_head = new Node(0, 0, 0);
       
       if (m_head == nullptr)
       {
@@ -79,7 +79,7 @@ class SparseMatrix {
       throw std::out_of_range("Valor invalido");
       }
       
-      if(i < 0 || i >= linhas || j < 0 || j >= colunas){ 
+      if(i < 0 || i > linhas || j < 0 || j > colunas){ 
         // Impede que os indices acessados sejam negativos ou indices que a matriz nao suporta 
       throw std::out_of_range("Indices invalidos");
     }
@@ -95,7 +95,7 @@ class SparseMatrix {
 
     // Verifica se a linha já existe ou precisa ser criada
     if(atual_c == m_head || atual_c->linhas != i){ // Cria uma nova linha, pois a linha i ainda não existe
-      Node* novaLinha = new Node(i, -1, 0); // -1 na coluna indica o nó de controle da linha
+      Node* novaLinha = new Node(i, 0, 0); // 0 na coluna indica o nó de controle da linha
       novaLinha->abaixo = atual_c; // O novo nó aponta para próxima linha
       auxguard->abaixo = novaLinha; // A linha anterioe aponta para a nova linha
       atual_c = novaLinha; // Atualiza a atual_c para apontar para a nova linha criada
@@ -127,7 +127,7 @@ class SparseMatrix {
     {
       //verifica se os índices são válidos
       //senão, lança uma exceção
-      if (i < 0 || i >= linhas || j < 0 || j >= colunas)
+      if (i < 0 || i > linhas || j < 0 || j > colunas)
       {
         throw std::out_of_range("Indice(s) invalido(s)");
       }
@@ -172,18 +172,16 @@ class SparseMatrix {
     //Exibe a matriz no terminal
     void print()
     {
-      for (int i = 0; i < linhas; i++)
+      for (int i = 1; i <= linhas; i++)
       {
-        for (int j = 0; i < colunas; i++)
+        for (int j = 1; i <= colunas; i++)
         {
           double valor = get(i, j);
           std::cout << valor << " ";
         }
         std::cout << std::endl;
       }  
-    }
-      
-    
+    } 
 };
 
 #endif
