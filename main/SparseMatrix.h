@@ -24,7 +24,7 @@ class SparseMatrix {
     {
       if(m <= 0 || n <= 0)
       {
-        throw std::out_of_range("Numero de linhas e/ou colunas invalidas");
+        throw std::out_of_range("Numero de linhas e/ou colunas invalidas.");
       }
 
       m_head->linhas = m;
@@ -34,17 +34,29 @@ class SparseMatrix {
       
       if (m_head == nullptr)
       {
-        throw std::out_of_range("Erro ao alocar memoria");
+        throw std::out_of_range("Erro ao alocar memoria.");
       }
       
       m_head->direita = m_head; //aponta para si mesmo
       m_head->abaixo = m_head; //aponta para si mesmo
     }
 
+    //Função que retorna o número de linhas de uma matriz esparsa
+    int getLinhas()
+    {
+      return linhas;
+    }
+
+    //Função que retorna o número de colunas de uma matriz esparsa
+    int getColunas()
+    {
+      return colunas;
+    }
+
     //Destrutor: libera a memória alocada
     ~SparseMatrix() {
       if(!m_head) {
-        throw std::out_of_range("Lista vazia");
+        throw std::out_of_range("Lista vazia.");
       } 
 
       Node* atual_c = m_head->abaixo; //recebe a primeira linha
@@ -76,12 +88,12 @@ class SparseMatrix {
     {
       if(value == 0) {
        // Não aceita inserir 0 na matriz
-      throw std::out_of_range("Valor invalido");
+      throw std::out_of_range("Valor invalido.");
       }
       
       if(i < 0 || i > linhas || j < 0 || j > colunas){ 
         // Impede que os indices acessados sejam negativos ou indices que a matriz nao suporta 
-      throw std::out_of_range("Indices invalidos");
+      throw std::out_of_range("Indices invalidos.");
     }
     // Ponteiros auxiliares que percorre a lista de linhas
     Node* atual_c = m_head->abaixo; // Recebe a primeira linha da matriz
@@ -129,7 +141,7 @@ class SparseMatrix {
       //senão, lança uma exceção
       if (i < 0 || i > linhas || j < 0 || j > colunas)
       {
-        throw std::out_of_range("Indice(s) invalido(s)");
+        throw std::out_of_range("Indice(s) invalido(s).");
       }
       
       Node* aux = m_head->abaixo;
