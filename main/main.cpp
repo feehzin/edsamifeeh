@@ -62,7 +62,13 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     // Percorre as linhas das matrizes ate que as duas tenham sido completamente revistadas
     while(linha_A != A.getHead-> || linha_B != B.getHead){
       // Se a linha de A for menor, insere os elementos de A em C
-      if(linha_B == B.getHead() || ahnil = lauta ())
+      if(linha_B == B.getHead() || (linha_A != A.getHead() && linha_A->linhas < linha_B->linhas)){
+        Node* atual_A = linha_A->direita; // Ponteiro para o primeiro elemento da linha A 
+        while(atua_A != linha_A){ // Percorre toda a linha A
+        C.insert(linha_A->linhas, atual_A->colunas, atual_A->valor); // Insere o valor de atual_A->valor na posição linha_A->linhas, atual_A->colunas em C
+        atual_A = atual_A->direita; // Segui para o próximo nó na linha A
+        }
+      }
     }
 
   }
@@ -79,36 +85,52 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 int main()
 {
   vector<SparseMatrix> matrix;
-
-  while (true)
-  {
-    int linhas, colunas;
-    string nome_arquivo;
-
-    cout << "Digite o arquivo de texto (ou 'sair' para proseguir/encerrar): ";
-    getline(cin, nome_arquivo);
-
-    if (nome_arquivo == 'sair')
-    {
-        break;
-    }
-    
-    ifstream arquivo;
-    arquivo.open(nome_arquivo);
-
-    if (!arquivo.is_open()){
-        cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
-        return;
-    }
-
-    arquivo >> linhas >> colunas;
-    aquivo.close();
   
-    matrix.push_back(SparseMatrix(linhas, colunas)); //push_back() adiciona a matriz no final do vetor
+  int numero;
 
-    readSparseMatrix(matrix.back(), nome_arquivo); //matrix.back() retorna uma referência para a última matrix adicionada no vetor
+  cout << "--------Menu de Operacoes de Matrizes--------" << endl
+       << "Digite 1 para adicionar uma ou mais novas matrizes" << endl
+       << "Digite 2 para somar alguma matriz especifica ou todas as matrizes adicionadas" << endl
+       << "Digite 3 para multiplicar alguma matriz especifica ou todas as matrizes adicionadas" << endl;
 
-    cout << "Matriz adicionada com sucesso!" << endl;
+  switch (numero){
+    case 1:
+      while (true)
+      {
+        int linhas, colunas;
+        string nome_arquivo;
+
+        cout << "Digite o arquivo de texto (ou 'sair' para prosseguir/encerrar): ";
+        getline(cin, nome_arquivo);
+
+        if (nome_arquivo == 'sair'){
+          break;
+        }
+    
+        ifstream arquivo;
+        arquivo.open(nome_arquivo);
+
+        if (!arquivo.is_open()){
+            cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
+            return;
+        }
+
+        arquivo >> linhas >> colunas;
+        aquivo.close();
+  
+        matrix.push_back(SparseMatrix(linhas, colunas)); //push_back() adiciona a matriz no final do vetor
+
+        readSparseMatrix(matrix.back(), nome_arquivo); //matrix.back() retorna uma referência para a última matrix adicionada no vetor
+
+        cout << "Matriz adicionada com sucesso!" << endl;
+      }
+    break;
+  
+    case 2:
+      
+    default:
+    break;
   }
   
-}
+  
+} 
