@@ -82,6 +82,22 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
 
 int main()
 {
-  
-  vector<SparseMatrix> matrix;
+  int linhas, colunas;
+
+  string nome_arquivo;
+  getline(cin, nome_arquivo);
+  cin.ignore();
+
+  ifstream arquivo;
+  arquivo.open(nome_arquivo);
+
+  if (!arquivo.is_open())
+  {
+    cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
+    return;
+  }
+
+  arquivo >> linhas >> colunas;
+
+  vector<SparseMatrix> matrix(linhas, colunas)
 }
