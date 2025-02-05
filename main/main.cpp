@@ -7,8 +7,7 @@
 #include "SparseMatrix.h"
 using namespace std;
 
-void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
-{
+void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     ifstream arquivo;
 
     arquivo.open(nome_do_arquivo);
@@ -21,7 +20,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
     int linhas, colunas;
     arquivo >> linhas >> colunas;
 
-    if (linhas != m.getLinhas() || colunas != m.getColunas()) {
+    if (linhas != m.getLinhas() || colunas != m.getColunas()){
         cerr << "Erro: dimensoes do arquivo nao correspodem a matriz dada" << endl; //o uso de cerr é para mensagens de erro
         arquivo.close();
         return;
@@ -30,13 +29,13 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
     int i, j;
     double valor;
 
-    while (arquivo >> i >> j >> valor) {
-        if (i < 1 || i > linhas || j < 1 || j > colunas) {
+    while (arquivo >> i >> j >> valor){
+        if (i < 1 || i > linhas || j < 1 || j > colunas){
             cerr << "Erro: indices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
             continue;
         }
       
-        if (valor == 0) {
+        if (valor == 0){
             continue;
         }
       
@@ -47,7 +46,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
 }
   
   /**Função que soma matrizes esparsas */
-  SparseMatrix sum(SparseMatrix& A, SparseMatrix& B) {
+  SparseMatrix sum(SparseMatrix& A, SparseMatrix& B){
     // Verificar se as matrizes são da mesma dimensão(tamanho)
     if(A.getLinhas() != B.getLinhas()|| A.getColunas()!= B.getColunas()){
       throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
@@ -60,19 +59,19 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
     Node* linha_B = B.m_head->abaixo; // Começa na primeira linha de B
 
     // Percorre as linhas das matrizes ate que as duas tenham sido completamente revistadas
-    whilee(linha_A != A.m_head-> || linha_B != B.m_head) {
+    whilee(linha_A != A.m_head-> || linha_B != B.m_head){
       
     }
 
   }
 
   // Matriz criada para guardar o resultado da soma        
-  SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B) {
-    if(A.getColunas()!= B.getLinhas()){
+  SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
+    if (A.getColunas()!= B.getLinhas()){
       throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
     }
-    SparseMatrix C(A.getLinhas(), A.getColunas());
-    
+
+    SparseMatrix C(A.getLinhas(), B.getColunas());  
   }
 
 int main()
@@ -87,8 +86,8 @@ int main()
   arquivo.open(nome_arquivo);
 
     if (!arquivo.is_open()){
-      cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
-      return;
+        cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
+        return;
     }
 
   arquivo >> linhas >> colunas;
