@@ -4,6 +4,7 @@
 #include <stdexcept> // Biblioteca para lançar exceções
 #include <algorithm> // Biblioteca para retornar o menor valor entre A e B
 #include <vector>
+#include <sstream>
 #include "SparseMatrix.h"
 using namespace std;
 
@@ -61,10 +62,14 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
     // Percorre as linhas das matrizes A e B
     while(linha_A != A.getHead()){
-      
+      Node* coluna_B = linha_A->direita; // Primeira coluna da linha de A
+      Node* coluna_A = linha_B->direita; // Primeira linha de B
+      while(coluna_A != linha_A )
     }
 
-    
+ coluna_B !=  {
+        
+      }  
 
   }
   
@@ -82,16 +87,20 @@ int main()
 {
   cout << "------- Sistema de Matrix -------" << endl
        << "Digite 'ajuda' para ver a lista de comandos" << endl;
-
-  string comando;
   
   while (true)
   {
+    string comando;
     getline(cin, comando);
 
-    if(comando == "ajuda")
+    istringstream ss(comando);
+    string cmd;
+
+    ss >> cmd;
+
+    if(cmd == "ajuda")
     {
-      cout << "------------------------- Lista de Comandos -------------------------" << endl
+        cout << "------------------------- Lista de Comandos -------------------------" << endl
            << "criar matriz M N ........ criar matriz vazia com M linhas e N colunas" << endl
            << "mostre matriz A ......... imprime a matriz A" << endl
            << "somar matrizes A B ...... soma a matriz A com a matriz B" << endl
@@ -100,8 +109,8 @@ int main()
            << "limpar matrizes ......... limpa todas as matrizes no vector" << endl
            << "sair..................... terminar sessao" << endl;
     }
-    else if(comando == ) {
-
+    else if(cmd == "criar") {
+        
     }
   }
 } 
