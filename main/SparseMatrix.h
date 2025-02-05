@@ -19,7 +19,7 @@ class SparseMatrix {
     int linhas, colunas; // Dimensões da matriz esparsa
 
   public:
-
+    // get que copia o m_head para usar na função
     Node* getHead() const{
       return m_head;
     }

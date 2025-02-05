@@ -59,21 +59,17 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     Node* linha_A = A.getHead()->abaixo; // Começa na primeira linha de A
     Node* linha_B = B.getHead()->abaixo; // Começa na primeira linha de B
 
-    // Percorre as linhas das matrizes ate que as duas tenham sido completamente revistadas
-    while(linha_A != A.getHead-> || linha_B != B.getHead){
-      // Se a linha de A for menor, insere os elementos de A em C
-      if(linha_B == B.getHead() || (linha_A != A.getHead() && linha_A->linhas < linha_B->linhas)){
-        Node* atual_A = linha_A->direita; // Ponteiro para o primeiro elemento da linha A 
-        while(atua_A != linha_A){ // Percorre toda a linha A
-        C.insert(linha_A->linhas, atual_A->colunas, atual_A->valor); // Insere o valor de atual_A->valor na posição linha_A->linhas, atual_A->colunas em C
-        atual_A = atual_A->direita; // Segui para o próximo nó na linha A
-        }
-      }
+    // Percorre as linhas das matrizes A e B
+    while(linha_A != A.getHead()){
+      
     }
 
-  }
+    
 
-      
+  }
+  
+
+     
   SparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
       throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
@@ -81,8 +77,31 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
     SparseMatrix C(A.getLinhas(), B.getColunas());  
   }
-
+ 
 int main()
 {
+  cout << "------- Sistema de Matrix -------" << endl
+       << "Digite 'ajuda' para ver a lista de comandos" << endl;
+
+  string comando;
   
+  while (true)
+  {
+    getline(cin, comando);
+
+    if(comando == "ajuda")
+    {
+      cout << "------------------------- Lista de Comandos -------------------------" << endl
+           << "criar matriz M N ........ criar matriz vazia com M linhas e N colunas" << endl
+           << "mostre matriz A ......... imprime a matriz A" << endl
+           << "somar matrizes A B ...... soma a matriz A com a matriz B" << endl
+           << "multi matrizes A B ...... multiplica a matriz A com a matriz B" << endl
+           << "limpar matriz A ......... limpa a matriz A" << endl
+           << "limpar matrizes ......... limpa todas as matrizes no vector" << endl
+           << "sair..................... terminar sessao" << endl;
+    }
+    else if(comando == ) {
+
+    }
+  }
 } 
