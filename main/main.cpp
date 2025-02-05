@@ -8,48 +8,43 @@
 using namespace std;
 
 void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
-  {
+{
     ifstream arquivo;
 
     arquivo.open(nome_do_arquivo);
 
-    if (!arquivo.is_open())
-    {
-      cerr << "Erro: nao foi possivel abrir: " << nome_do_arquivo << endl;
-      return;
+    if (!arquivo.is_open()) {
+        cerr << "Erro: nao foi possivel abrir: " << nome_do_arquivo << endl;
+        return;
     }
 
     int linhas, colunas;
     arquivo >> linhas >> colunas;
 
-    if (linhas != m.getLinhas() || colunas != m.getColunas())
-    {
-      cerr << "Erro: dimensoes do arquivo nao correspodem a matriz dada" << endl; //o uso de cerr é para mensagens de erro
-      arquivo.close();
-      return;
+    if (linhas != m.getLinhas() || colunas != m.getColunas()) {
+        cerr << "Erro: dimensoes do arquivo nao correspodem a matriz dada" << endl; //o uso de cerr é para mensagens de erro
+        arquivo.close();
+        return;
     }
     
     int i, j;
     double valor;
 
-    while (arquivo >> i >> j >> valor)
-    {
-      if (i < 1 || i > linhas || j < 1 || j > colunas)
-      {
-        cerr << "Erro: indices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
-        continue;
-      }
+    while (arquivo >> i >> j >> valor) {
+        if (i < 1 || i > linhas || j < 1 || j > colunas) {
+            cerr << "Erro: indices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
+            continue;
+        }
       
-      if (valor == 0)
-      {
-        continue;
-      }
+        if (valor == 0) {
+            continue;
+        }
       
-      m.insert(i, j, valor);
+        m.insert(i, j, valor);
     }
     
     arquivo.close();
-  }
+}
   
   /**Função que soma matrizes esparsas */
   SparseMatrix sum(SparseMatrix& A, SparseMatrix& B) {
@@ -91,13 +86,12 @@ int main()
   ifstream arquivo;
   arquivo.open(nome_arquivo);
 
-  if (!arquivo.is_open())
-  {
-    cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
-    return;
-  }
+    if (!arquivo.is_open()){
+      cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
+      return;
+    }
 
   arquivo >> linhas >> colunas;
 
-  vector<SparseMatrix> matrix(linhas, colunas)
+  vector<SparseMatrix> matrix(linhas, colunas);
 }
