@@ -84,7 +84,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
         }
       }
       // Adicionam as colunas restantes de A e B, se houver
-      whili  
+      while(coluna_A != l)
 
   }
   
@@ -150,6 +150,10 @@ int main()
       }
       else {
         throw std::out_of_range("A matriz com o indice " << A << "nao encontra-se listado no sistema");
+
+        
+        cout << "gostaria de adiciona-lo? [y/n] ";
+        
       }
     }
     
