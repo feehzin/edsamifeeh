@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept> // Biblioteca para lançar exceções
 #include <algorithm> // Biblioteca para retornar o menor valor entre A e B
+#include <vector>
 #include "SparseMatrix.h"
 using namespace std;
 
@@ -72,8 +73,8 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
 
   // Matriz criada para guardar o resultado da soma        
   SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B) {
-    if(A.getLinhas() != B.getLinhas()|| A.getColunas()!= B.getColunas()){
-      throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
+    if(A.getColunas()!= B.getLinhas()){
+      throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
     }
     SparseMatrix C(A.getLinhas(), A.getColunas());
     
@@ -82,5 +83,5 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo)
 int main()
 {
   
-
+  vector<SparseMatrix> matrix;
 }
