@@ -84,53 +84,5 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
 int main()
 {
-  vector<SparseMatrix> matrix;
-  
-  int numero;
-
-  cout << "--------Menu de Operacoes de Matrizes--------" << endl
-       << "Digite 1 para adicionar uma ou mais novas matrizes" << endl
-       << "Digite 2 para somar alguma matriz especifica ou todas as matrizes adicionadas" << endl
-       << "Digite 3 para multiplicar alguma matriz especifica ou todas as matrizes adicionadas" << endl;
-
-  switch (numero){
-    case 1:
-      while (true)
-      {
-        int linhas, colunas;
-        string nome_arquivo;
-
-        cout << "Digite o arquivo de texto (ou 'sair' para prosseguir/encerrar): ";
-        getline(cin, nome_arquivo);
-
-        if (nome_arquivo == 'sair'){
-          break;
-        }
-    
-        ifstream arquivo;
-        arquivo.open(nome_arquivo);
-
-        if (!arquivo.is_open()){
-            cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
-            return;
-        }
-
-        arquivo >> linhas >> colunas;
-        aquivo.close();
-  
-        matrix.push_back(SparseMatrix(linhas, colunas)); //push_back() adiciona a matriz no final do vetor
-
-        readSparseMatrix(matrix.back(), nome_arquivo); //matrix.back() retorna uma referência para a última matrix adicionada no vetor
-
-        cout << "Matriz adicionada com sucesso!" << endl;
-      }
-    break;
-  
-    case 2:
-      
-    default:
-    break;
-  }
-  
   
 } 
