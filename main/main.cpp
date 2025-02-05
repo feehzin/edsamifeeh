@@ -52,21 +52,23 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
       throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
     }
     
+    // Cria uma matriz para guardar o resultado com as mesmas dimensões de A e B
     SparseMatrix C(A.getLinhas(), A.getColunas());
 
     // Ponteiros para percorrer as linhas das matrizes A e B
-    Node* linha_A = A.m_head->abaixo; // Começa na primeira linha de A
-    Node* linha_B = B.m_head->abaixo; // Começa na primeira linha de B
+    Node* linha_A = A.getHead()->abaixo; // Começa na primeira linha de A
+    Node* linha_B = B.getHead()->abaixo; // Começa na primeira linha de B
 
     // Percorre as linhas das matrizes ate que as duas tenham sido completamente revistadas
-    whilee(linha_A != A.m_head-> || linha_B != B.m_head){
-      
+    while(linha_A != A.getHead-> || linha_B != B.getHead){
+      // Se a linha de A for menor, insere os elementos de A em C
+      if(linha_B == B.getHead() || ahnil = lauta ())
     }
 
   }
 
-  // Matriz criada para guardar o resultado da soma        
-  SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
+      
+  SparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
       throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
     }
@@ -76,21 +78,37 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
 int main()
 {
-  int linhas, colunas;
+  vector<SparseMatrix> matrix;
 
-  string nome_arquivo;
-  getline(cin, nome_arquivo);
-  cin.ignore();
+  while (true)
+  {
+    int linhas, colunas;
+    string nome_arquivo;
 
-  ifstream arquivo;
-  arquivo.open(nome_arquivo);
+    cout << "Digite o arquivo de texto (ou 'sair' para proseguir/encerrar): ";
+    getline(cin, nome_arquivo);
+
+    if (nome_arquivo == 'sair')
+    {
+        break;
+    }
+    
+    ifstream arquivo;
+    arquivo.open(nome_arquivo);
 
     if (!arquivo.is_open()){
         cerr << "Erro: nao foi possivel abrir: " << nome_arquivo << endl;
         return;
     }
 
-  arquivo >> linhas >> colunas;
+    arquivo >> linhas >> colunas;
+    aquivo.close();
+  
+    matrix.push_back(SparseMatrix(linhas, colunas)); //push_back() adiciona a matriz no final do vetor
 
-  vector<SparseMatrix> matrix(linhas, colunas);
+    readSparseMatrix(matrix.back(), nome_arquivo); //matrix.back() retorna uma referência para a última matrix adicionada no vetor
+
+    cout << "Matriz adicionada com sucesso!" << endl;
+  }
+  
 }

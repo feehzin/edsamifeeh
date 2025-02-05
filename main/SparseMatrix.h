@@ -19,9 +19,12 @@ class SparseMatrix {
     int linhas, colunas; // Dimensões da matriz esparsa
 
   public:
+
+    Node* getHead() const{
+      return m_head;
+    }
     //Construtor (cria uma matriz vazia)
-    SparseMatrix(int m, int n)
-    {
+    SparseMatrix(int m, int n){
       if(m <= 0 || n <= 0)
       {
         throw std::out_of_range("Numero de linhas e/ou colunas invalidas.");
@@ -41,19 +44,18 @@ class SparseMatrix {
     }
 
     //Função que retorna o número de linhas de uma matriz esparsa
-    int getLinhas()
-    {
+    int getLinhas(){
       return linhas;
     }
 
     //Função que retorna o número de colunas de uma matriz esparsa
-    int getColunas()
-    {
+    int getColunas(){
       return colunas;
     }
 
+
     //Destrutor: libera a memória alocada
-    ~SparseMatrix() {
+    ~SparseMatrix(){
       if(!m_head) {
         throw std::out_of_range("Lista vazia.");
       } 
@@ -61,8 +63,8 @@ class SparseMatrix {
       Node* atual_c = m_head->abaixo; //recebe a primeira linha
 
       //percorre as linhas da matriz
-      while(atual_c != m_head) {
-      
+      while(atual_c != m_head){
+    
         Node* atual_l = atual_c->direita;
 
         //percorre até retornar para o início da linha
@@ -85,7 +87,7 @@ class SparseMatrix {
     //Função que insere um valor na matriz esparsa
     void insert(int i, int j, double value)
     {
-      if(value == 0) {
+      if(value == 0){
        // Não aceita inserir 0 na matriz
       throw std::out_of_range("Valor invalido.");
       }
