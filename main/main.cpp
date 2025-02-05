@@ -66,13 +66,30 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
       Node* coluna_A = linha_B->direita; // Primeira linha de B
       while(coluna_A != linha_A && coluna_B != linha_B){
         if(coluna_A->colunas == coluna_B->colunas){ // Se as colunas forem iguais, soma os valores
-          double soma = coluna_A->valor + co
+          double soma = coluna_A->valor + coluna_B->valor;
+          if(soma != 0){
+            C.inserte(coluna_A->linhas, coluna_A->colunas, soma);
+          }
+          coluna_A = coluna_A->direita; // Avança para a próxima coluna de A
+          coluna_B = coluna_B->direita; // Avança para a próxima coluna de B
         }
-      }  
+        else if(coluna_A->colunas < coluna_B->colunas){
+          // Se a coluna A for melhor, insere o valor de A 
+          C.insert(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
+          coluna_A = coluna_A->direita; // Avança para a próxima coluna de A
+        }else{
+          // Se a coluna de B for menor, insere a o valor eem B
+          C.insert(coluna_B->linhas, coluna_B->colunas, coluna_B->valor);
+          coluna_B = coluna_B->direita; // Avança para a próximma coluna de B
+        }
+      }
+      // Adicionam as colunas restantes de A e B, se houver
+      whili  
 
   }
   
 
+ l
      
   SparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
@@ -81,16 +98,15 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
     SparseMatrix C(A.getLinhas(), B.getColunas());  
   }
- 
+  }
 int main()
 {
-  vector<SparseMatrix> matrix;
-  
+  vector<SparseMatrix> matriz;
+
   cout << "------- Sistema de Matrix -------" << endl
        << "Digite 'ajuda' para ver a lista de comandos" << endl;
   
-  while (true)
-  {
+  while (true) {
     string comando;
     getline(cin, comando);
 
@@ -101,7 +117,7 @@ int main()
 
     if(cmd == "ajuda")
     {
-        cout << "------------------------- Lista de Comandos -------------------------" << endl
+      cout << "------------------------- Lista de Comandos -------------------------" << endl
            << "criar matriz M N ........ criar matriz vazia com M linhas e N colunas" << endl
            << "mostre matriz A ......... imprime a matriz A" << endl
            << "somar matrizes A B ...... soma a matriz A com a matriz B" << endl
@@ -111,14 +127,31 @@ int main()
            << "sair..................... terminar sessao" << endl;
     }
     else if(cmd == "criar") {
-        int M, N;
-        ss >> M > N;
+      int M, N;
+      ss >> M > N;
 
-        if (M > 0 && N > 0)
-        {
-          matrix.
-        }
-        
+      if (M > 0 && N > 0)
+      {
+        matrix.push_back(SparseMatrix(M, N));
+        cout << "Matriz "<< matriz.size() - 1 << "adicionada com sucesso!" << endl;
+      }
+      else {
+        throw std::out_of_range("Dimensoes da matriz sao invalidas");
+      }     
     }
+    else if (cmd == "mostre")
+    {
+      int A;
+      ss > A;
+
+      if (A > 0 && A < matriz.size())
+      {
+        matriz[A].print();
+      }
+      else {
+        throw std::out_of_range("A matriz com o indice " << A << "nao encontra-se listado no sistema");
+      }
+    }
+    
   }
 } 
