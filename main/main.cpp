@@ -64,11 +64,10 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     while(linha_A != A.getHead()){
       Node* coluna_B = linha_A->direita; // Primeira coluna da linha de A
       Node* coluna_A = linha_B->direita; // Primeira linha de B
-      while(coluna_A != linha_A )
-    }
-
- coluna_B !=  {
-        
+      while(coluna_A != linha_A && coluna_B != linha_B){
+        if(coluna_A->colunas == coluna_B->colunas){ // Se as colunas forem iguais, soma os valores
+          double soma = coluna_A->valor + co
+        }
       }  
 
   }
@@ -85,6 +84,8 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
  
 int main()
 {
+  vector<SparseMatrix> matrix;
+  
   cout << "------- Sistema de Matrix -------" << endl
        << "Digite 'ajuda' para ver a lista de comandos" << endl;
   
@@ -110,6 +111,13 @@ int main()
            << "sair..................... terminar sessao" << endl;
     }
     else if(cmd == "criar") {
+        int M, N;
+        ss >> M > N;
+
+        if (M > 0 && N > 0)
+        {
+          matrix.
+        }
         
     }
   }
