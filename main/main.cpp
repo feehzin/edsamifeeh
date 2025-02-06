@@ -154,7 +154,7 @@ int main()
       if (A > 0 && A < matriz.size()){
         matriz[A].print();
       }
-      else{
+      else {
         throw out_of_range("A matriz com o indice [" << A << "] nao encontra-se listada no sistema.");
 
         char n;
@@ -179,7 +179,7 @@ int main()
         matriz.push_back(resultado);
         matriz.back().print();
       }
-      else{
+      else {
         throw out_of_range("Indices passados sao invalidos.") << endl;
       }
     }
