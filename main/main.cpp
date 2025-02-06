@@ -8,6 +8,20 @@
 #include "SparseMatrix.h"
 using namespace std;
 
+void criar(istringstream ss){
+  int M, N;
+  ss >> M >> N;
+
+  if (M > 0 && N > 0)
+  {
+    matrix.push_back(SparseMatrix(M, N));
+    cout << "Matriz "<< matriz.size() - 1 << "adicionada com sucesso!" << endl;
+  }
+  else {
+    throw out_of_range("Dimensoes da matriz sao invalidas");
+  }
+}
+
 void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     ifstream arquivo;
 
@@ -50,7 +64,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
   SparseMatrix sum(SparseMatrix& A, SparseMatrix& B){
     // Verificar se as matrizes são da mesma dimensão(tamanho)
     if(A.getLinhas() != B.getLinhas()|| A.getColunas()!= B.getColunas()){
-      throw std::out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
+      throw out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
     }
     
     // Cria uma matriz para guardar o resultado com as mesmas dimensões de A e B
@@ -97,7 +111,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
      
   coluna_ASparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
-      throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
+      throw out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
     }
 
     SparseMatrix C(A.getLinhas(), B.getColunas());  
@@ -130,37 +144,44 @@ int main()
            << "limpar matrizes ......... limpa todas as matrizes no vector" << endl
            << "sair..................... terminar sessao" << endl;
     }
-    else if(cmd == "criar") {
-      int M, N;
-      ss >> M > N;
-
-      if (M > 0 && N > 0)
-      {
-        matrix.push_back(SparseMatrix(M, N));
-        cout << "Matriz "<< matriz.size() - 1 << "adicionada com sucesso!" << endl;
-      }
-      else {
-        throw std::out_of_range("Dimensoes da matriz sao invalidas");
-      }     
+    else if(cmd == "criar"){
+      criar(ss);
     }
-    else if (cmd == "mostre")
-    {
+    else if(cmd == "mostre"){
       int A;
-      ss > A;
+      ss >> A;
 
-      if (A > 0 && A < matriz.size())
-      {
+      if (A > 0 && A < matriz.size()){
         matriz[A].print();
       }
-      else {
-        throw std::out_of_range("A matriz com o indice " << A << "nao encontra-se listado no sistema");
+      else{
+        throw out_of_range("A matriz com o indice [" << A << "] nao encontra-se listada no sistema.");
 
         char n;
-        cout << "gostaria de adiciona-lo? [y/n] ";
-        cin 
-        
+        cout << "gostaria de adiciona-la? [y/n]: ";
+        cin << n;
+
+        if (n == 'y')
+        {
+          criar(ss);
+        }
+        else {
+          cout << "Operacao nao realizada." << endl;
+        }
+      }
+    } 
+    else if(cmd == "somar"){
+      int A, B;
+      ss >> A >> B;
+
+      if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()){
+        SparseMatrix resultado = sum(matriz[A],matriz[B]);
+        matriz.push_back(resultado);
+        matriz.back().print();
+      }
+      else{
+        throw out_of_range("Indices passados sao invalidos.") << endl;
       }
     }
-    
   }
 } 
