@@ -84,14 +84,18 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
         }
       }
       // Adicionam as colunas restantes de A e B, se houver
-      while(coluna_A != l)
+      while(coluna_A != linha_A){
+        C.inserte(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
+        caluna_A = coluna_A->direita;
+      }
+      while()
 
   }
   
 
  l
      
-  SparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
+  coluna_ASparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
       throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
     }
@@ -151,8 +155,9 @@ int main()
       else {
         throw std::out_of_range("A matriz com o indice " << A << "nao encontra-se listado no sistema");
 
-        
+        char n;
         cout << "gostaria de adiciona-lo? [y/n] ";
+        cin 
         
       }
     }
