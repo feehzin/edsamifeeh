@@ -102,21 +102,33 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
         C.inserte(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
         caluna_A = coluna_A->direita;
       }
-      while()
-
+      while(coluna_B != linha_B){
+        C.inserte(coluna_B->linhas, coluna_B->colunas, coluna_B->valor);
+        coluna_B = coluna_B->direita;
+      }
+      // Avança para a próxima linha de A e B
+      linha_A = linha_A->abaixo;
+      linha_B = linha_B->abaixo;
+    }
+    return C;
   }
-  
-
- l
+}
      
-  coluna_ASparseMatrix multiply(SparseMatrix& *A, SNodeparseMatrix& B){
+ SparseMatrix multiply(SparseMatrix& A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
-      throw out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
+      throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
     }
 
     SparseMatrix C(A.getLinhas(), B.getColunas());  
+
+    // loop para percorrer todas a linhas de A
+    for(Node* element_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo){
+      int i = element_A->linhas;
+      int j = element_A->colunas;
+      double valorA = element_A->valor;
+    }
   }
-  }
+
 int main()
 {
   vector<SparseMatrix> matriz;
