@@ -112,7 +112,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     }
     return C;
   }
-}
+
      
  SparseMatrix multiply(SparseMatrix& A, SNodeparseMatrix& B){
     if (A.getColunas()!= B.getLinhas()){
@@ -147,17 +147,33 @@ int main()
 
     if(cmd == "ajuda")
     {
-      cout << "------------------------- Lista de Comandos -------------------------" << endl
-           << "criar matriz M N ........ criar matriz vazia com M linhas e N colunas" << endl
-           << "mostre matriz A ......... imprime a matriz A" << endl
-           << "somar matrizes A B ...... soma a matriz A com a matriz B" << endl
-           << "multi matrizes A B ...... multiplica a matriz A com a matriz B" << endl
-           << "limpar matriz A ......... limpa a matriz A" << endl
-           << "limpar matrizes ......... limpa todas as matrizes no vector" << endl
-           << "sair..................... terminar sessao" << endl;
+      cout << "------------------------------------ Lista de Comandos------------------------------------" << endl
+           << "criar matriz M N......... criar matriz vazia com M linhas e N colunas" << endl
+           << "ler m.txt................ le arquivo de texto, armazenando seus parametros em uma matriz"
+           << "mostre matriz A.......... mostra a matriz A" << endl
+           << "somar matrizes A B....... soma a matriz A com a matriz B" << endl
+           << "multi matrizes A B....... multiplica a matriz A com a matriz B" << endl
+           << "mudar A i j valor........ substitui o valor no indice i (linha), j (coluna) na matriz A" << endl
+           << "listar................... mostra todas as matrizes do sistema"
+           << "limpar matriz A.......... limpa a matriz A" << endl
+           << "limparM.................. limpa todas as matrizes do sistema" << endl
+           << "sair..................... terminar sessao" << endl
+           << "-------------------------------------------------------------------------------------------" << endl;
     }
     else if(cmd == "criar"){
       criar(ss);
+    }
+    else if(cmd == "ler"){
+      string arquivo;
+      ss >> arquivo;
+
+      
+
+      SparseMatrix m(0, 0);
+      readSparseMatrix(m, arquivo);
+      matriz.push_back(m);
+
+      cout << "Nova matriz, com parametros do arquivo (" << arquivo << ") listada no sistema com sucesso!" << endl;
     }
     else if(cmd == "mostre"){
       int A;
@@ -195,7 +211,64 @@ int main()
         throw out_of_range("Indices passados sao invalidos.") << endl;
       }
     }
-  }
+    else if(cmd == "multi"){
+      int A, B;
+      ss >> A >> B;
 
-  while()
+      if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()){
+        SparseMatrix resultado = multiply(matriz[A],matriz[B]);
+        matriz.push_back(resultado);
+        matriz.back().print();
+      }
+      else {
+        throw out_of_range("Indices passados sao invalidos.") << endl;
+      }
+    }
+    else if(cmd == "mudar"){
+      int A, i, j, value;
+      ss >> A >> i >> j >> 0;
+
+      if (A >= 0 && A < matriz.size() && i > 1 && i <= matriz[A].getLinhas() && j > 1 && j <= matriz[A].getColunas())
+      {
+        matriz[A].insert(i, j);
+
+        cout << "Valor atualizado na matriz[" << A << "] com sucesso!" << endl;
+      }
+      else {
+        throw out_of_range("Dados passados nao correspodem a alguma matriz no sistema.")
+      }
+    }
+    else if(cmd == "limpar")
+    {
+      int A;
+      ss >> A;
+
+      if (A >= 0 && A < matriz.size())
+      {
+        matriz[A].clear();
+
+        cout << "Matriz[" << A << "] limpa com sucesso" << endl;
+      }
+      else {
+        throw out_of_range("Indice passado nao valido!");
+      }
+    }
+    else if(cmd == "limparM"){
+      for (int i = 0; i < matriz.size(); i++)
+      {
+        matriz[i].clear();
+      }
+      cout << "Sistema limpo com sucesso!" << endl;
+    }
+    else if (cmd == "listar")
+    {
+      for (int i = 0; i < matriz.size(); i++)
+      {
+        matriz[i].print();
+        cout << endl;
+      }
+      cout << "Todas as matrizes foram mostradas com sucesso!" << endl;
+    }
+    
+  }
 } 
