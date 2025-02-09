@@ -37,67 +37,107 @@ class SparseMatrix {
       m_head->direita = m_head; // Lista circular na horizontal
       m_head->abaixo = m_head; // Lista circular na vertical
     }
+
+    // Construtor de cópia (cópia profunda)
+    SparseMatrix(const SparseMatrix& mat) {
+      linhas = mat.linhas;
+      colunas = mat.colunas;
+      m_head = new Node(0, 0, 0);
+      m_head->direita = m_head;
+      m_head->abaixo = m_head;
+
+      // Copia os elementos não nulos da outra matriz
+      Node* matM_Head = mat.m_head->abaixo;
+      while (matM_Head != mat.m_head) {
+          Node* matElem = matM_Head->direita;
+          while (matElem != matM_Head) {
+            this->insert(matElem->linhas, matElem->colunas, matElem->valor);
+            matElem = matElem->direita;
+          }
+          matM_Head = otherRow->abaixo;
+      }
+    }
+
+    // Operador de atribuição (para cópia profunda)
+    SparseMatrix& operator=(const SparseMatrix& other) {
+      if (this != &other) {
+          clear();
+          linhas = other.linhas;
+          colunas = other.colunas;
+          Node* otherRow = other.m_head->abaixo;
+          while (otherRow != other.m_head) {
+              Node* otherElem = otherRow->direita;
+              while (otherElem != otherRow) {
+                  this->insert(otherElem->linhas, otherElem->colunas, otherElem->valor);
+                  otherElem = otherElem->direita;
+              }
+              otherRow = otherRow->abaixo;
+          }
+      }
+      return *this;
+  }
   
     //Destrutor: libera a memória alocada dinamicamente.
     ~SparseMatrix() {
-      if (!m_head) return;
-      Node* atual_L = m_head->abaixo;
-      while (atual_L != m_head) {
-          Node* atual_C = atual_L->direita;
-          while (atual_C != atual_L) {
-              Node* aux = atual_C;
-              atual_C = atual_C->direita;
-              delete aux; // Libera memória da célula
-          }
-          Node* aux = atual_L;
-          atual_L = atual_L->abaixo;
-          delete aux; // Libera memória da linha
-      }
-      delete m_head; // Libera o nó sentinela
-      m_head = nullptr;
+      clear();
+      delete m_head;
   }
     // Retorna o número de linhas de uma matriz.
-    int getLinhas() const { return linhas; }
+    int getLinhas() const { 
+      return linhas; 
+    }
 
     // Retorna o número de colunas de uma matriz.
-    int getColunas() const { return colunas; }
+    int getColunas() const {
+       return colunas; 
+    }
   
-     // Retorna o ponteiro para o nó sentinela da matriz.
-     Node* getHead() const { return m_head; }
+    // Retorna o ponteiro para o nó sentinela da matriz.
+    Node* getHead() const {
+       return m_head; 
+    }
 
     // Função que insere um valor na matriz esparsa
     void insert(int i, int j, double value){
     if (value == 0) return;
     if (i < 1 || i > linhas || j < 1 || j > colunas) {
-        throw std::out_of_range("Índices fora dos limites da matriz.");
+      throw std::out_of_range("Índices fora dos limites da matriz.");
     }
-    Node* atual_L = m_head;
-    while (atual_L->abaixo != m_head && atual_L->abaixo->linha < i) {
-        atual_L = atual_L->abaixo;
+    Node* prev_L = m_head;
+    Node* atual_L = m_head->abaixo;
+    while (atual_L != m_head && atual_L->abaixo->linha < i) {
+      prev_L = atual_L;
+      atual_L = atual_L->abaixo;
     }
-    if (atual_L->abaixo == m_head || atual_L->abaixo->linha != i) {
-        Node* novaLinha = new Node(i, -1, 0);
-        novaLinha->abaixo = atual_L->abaixo;
-        atual_L->abaixo = novaLinha;
+    if (atual_L == m_head || atual_L->linha != i) {
+      Node* novaLinha = new Node(i, 0, 0);
+      novaLinha->abaixo = atual_L;
+      prev_L->abaixo = novaLinha;
+      novaLinha->direita = novaLinha;
+      atual_L = novaLinha;
     }
-    atual_L = atual_L->abaixo;
     
-    Node* atual_C = atual_L;
-    while (atual_C->direita != atual_L && atual_C->direita->coluna < j) {
-        atual_C = atual_C->direita;
+    Node* prevElem = currRow;
+    Node* currElem = currRow->direita;
+    while (currElem != currRow && currElem->colunas < j) {
+      prevElem = currElem;
+      currElem = currElem->direita;
     }
-    if (atual_C->direita == atual_L || atual_C->direita->coluna != j) {
-        Node* novoNode = new Node(i, j, value);
-        novoNode->direita = atual_C->direita;
-        atual_C->direita = novoNode;
-    } else {
-        atual_C->direita->valor = value;
+    if (currElem != currRow && currElem->colunas == j) {
+      // Se o elemento já existe, atualiza seu valor
+      currElem->valor = value;
+    }
+    else {
+      // Insere um novo nó na posição correta
+      Node* newNode = new Node(i, j, value);
+      newNode->direita = currElem;
+      prevElem->direita = newNode;
     }
 }
     // Retorna um valor específico da matriz.
-    double get (int i, int j) const {
-      if (i < 1 || i > linhas || j < 1 || j > colunas) {
-        throw std::out_of_range("Índices fora dos limites da matriz.");
+    double get(int i, int j) const {
+    if (i < 1 || i > linhas || j < 1 || j > colunas) {
+      throw std::out_of_range("Índices fora dos limites da matriz.");
     }
     Node* atual_L = m_head->abaixo;
     while (atual_L != m_head && atual_L->linha < i) {
@@ -125,15 +165,22 @@ class SparseMatrix {
 
     //Limpa a matriz, setando todos os seus valores para 0.0.
     void clear() {
-      for (int i = 0; i < linhas; i++) {
-          Node* atual = m_head[i];  // Ponteiro para o início da lista da linha
-          while (atual != nullptr) {
-              Node* temp = atual;
-              atual = atual->next;
-              delete temp;  // Libera a memória do nó
-          }
-          m_head[i] = nullptr;  // Após liberar todos os nós da linha, seta o ponteiro da linha para nullptr
+      Node* atualM_Head = m_head->abaixo;
+      
+      while (atualM_Head != m_head)
+      {
+        Node* atualElem = atualM_Head->direita;
+        while (atualElem != atualM_Head)
+        {
+          Node* temp = atualElem;
+          atualElem = atualElem->direita;
+          delete temp;
+        }
+        Node* tempM_Head = atualM_Head;
+        atualM_Head = atualM_Head->direita;
+        delete tempM_Head;
       }
+      m_head->abaixo = m_head;
     }
   
 };
