@@ -124,18 +124,18 @@ class SparseMatrix {
     } 
 
     //Limpa a matriz, setando todos os seus valores para 0.0.
-    clear()
-    {
+    void clear() {
       for (int i = 0; i < linhas; i++) {
-        Node* atual = m_head[i];  // Ponteiro para o início da lista da linha
-        while (atual != nullptr) {
-            Node* temp = atual;
-            atual = atual->next;
-            delete temp;  // Libera a memória do nó
-        }
-        m_head = nullptr;
+          Node* atual = m_head[i];  // Ponteiro para o início da lista da linha
+          while (atual != nullptr) {
+              Node* temp = atual;
+              atual = atual->next;
+              delete temp;  // Libera a memória do nó
+          }
+          m_head[i] = nullptr;  // Após liberar todos os nós da linha, seta o ponteiro da linha para nullptr
       }
     }
+  
 };
 
 #endif

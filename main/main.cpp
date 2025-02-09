@@ -235,30 +235,32 @@ int main()
         throw out_of_range("Dados passados nao correspodem a alguma matriz no sistema.")
       }
     }
-    else if(cmd == "limpar"){
+    else if (cmd == "limpar") {
       int A;
       ss >> A;
-
+  
       if (A >= 0 && A < matriz.size()) {
-        delete matriz[A];        // Libera a memória da matriz
-        matriz.erase(matriz.begin() + A);  // Remove o ponteiro do vetor
-        cout << "Matriz[" << A << "] foi removida do sistema!" << endl;
-      }
-     else {
-        throw std::out_of_range("Indice passado nao valido!");
-      }
-    else if(cmd == "limparM"){
-      if (matriz.empty()) {
-        cout << "Nao ha matrizes para limpar." << endl;
+          delete matriz[A];        // Libera a memória da matriz alocada dinamicamente
+          matriz.erase(matriz.begin() + A);  // Remove o ponteiro do vetor
+          cout << "Matriz[" << A << "] foi removida do sistema!" << endl;
       } 
       else {
-        for (auto ptr : matriz) {
-          delete ptr;  // Libera a memória alocada para cada matriz
-        }
-        matriz.clear();  // Remove todos os ponteiros do vetor
-        cout << "Todas as matrizes foram removidas do sistema!" << endl;
+          throw std::out_of_range("Índice passado não válido!");
       }
     }
+    else if (cmd == "limparM") {
+      if (matriz.empty()) {
+          cout << "Não há matrizes para limpar." << endl;
+      } 
+      else {
+          for (auto ptr : matriz) {
+            delete ptr;  // Libera a memória alocada para cada matriz
+          }
+          matriz.clear();  // Remove todos os ponteiros do vetor
+          cout << "Todas as matrizes foram removidas do sistema!" << endl;
+      }
+  }
+  
     else if (cmd == "listar"){
       for (int i = 0; i < matriz.size(); i++)
       {
