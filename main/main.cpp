@@ -8,7 +8,7 @@
 #include "SparseMatrix.h"
 using namespace std;
 
-void readSparseMatrix(SparseMatrix*& m, const std::string& nome_do_arquivo) {
+void readSparseMatrix(SparseMatrix& m, std::string& nome_do_arquivo) {
   ifstream arquivo(nome_do_arquivo);
   
   if (!arquivo.is_open()) {
@@ -16,20 +16,8 @@ void readSparseMatrix(SparseMatrix*& m, const std::string& nome_do_arquivo) {
       return;
   }
 
-  // Se a matriz já existe e tem dimensões diferentes, precisa ser recriada
-  if (m == nullptr || linhas != m->getLinhas() || colunas != m->getColunas()) {
-    delete m;  // Libera a memória da matriz antiga
-    m = new SparseMatrix(linhas, colunas);  // Cria uma nova matriz com as dimensões corretas
-}
-
   int linhas, colunas;
   arquivo >> linhas >> colunas;
-
-  // Se a matriz já existe e tem dimensões diferentes, precisa ser recriada
-  if (m == nullptr || linhas != m->getLinhas() || colunas != m->getColunas()) {
-      delete m;  // Libera a memória da matriz antiga
-      m = new SparseMatrix(linhas, colunas);  // Cria uma nova matriz com as dimensões corretas
-  }
 
   int i, j;
   double valor;
