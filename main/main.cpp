@@ -16,6 +16,12 @@ void readSparseMatrix(SparseMatrix*& m, const std::string& nome_do_arquivo) {
       return;
   }
 
+  // Se a matriz já existe e tem dimensões diferentes, precisa ser recriada
+  if (m == nullptr || linhas != m->getLinhas() || colunas != m->getColunas()) {
+    delete m;  // Libera a memória da matriz antiga
+    m = new SparseMatrix(linhas, colunas);  // Cria uma nova matriz com as dimensões corretas
+}
+
   int linhas, colunas;
   arquivo >> linhas >> colunas;
 
