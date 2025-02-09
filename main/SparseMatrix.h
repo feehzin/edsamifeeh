@@ -19,7 +19,6 @@ class SparseMatrix {
     int linhas, colunas; // Dimensões da matriz esparsa
 
   public:
-    
     /*Construtor (cria uma matriz vazia).
     Para m Número de linhas.
     Para n Número de colunas.
@@ -123,6 +122,20 @@ class SparseMatrix {
         std::cout << std::endl;
       }  
     } 
+
+    //Limpa a matriz, setando todos os seus valores para 0.0.
+    clear()
+    {
+      for (int i = 0; i < linhas; i++) {
+        Node* atual = m_head[i];  // Ponteiro para o início da lista da linha
+        while (atual != nullptr) {
+            Node* temp = atual;
+            atual = atual->next;
+            delete temp;  // Libera a memória do nó
+        }
+        m_head = nullptr;
+      }
+    }
 };
 
 #endif

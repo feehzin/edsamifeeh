@@ -10,16 +10,15 @@ using namespace std;
 
 void criar(istringstream ss){
   int M, N;
-  ss >> M >> N;
+    ss >> M >> N;
 
-  if (M > 0 && N > 0)
-  {
-    matrix.push_back(SparseMatrix(M, N));
-    cout << "Matriz "<< matriz.size() - 1 << "adicionada com sucesso!" << endl;
-  }
-  else {
-    throw out_of_range("Dimensoes da matriz sao invalidas");
-  }
+    if (M > 0 && N > 0) {
+        SparseMatrix* novaMatriz = new SparseMatrix(M, N);  // Aloca dinamicamente
+        matriz.push_back(novaMatriz);
+        cout << "Matriz " << matriz.size() - 1 << " adicionada com sucesso!" << endl;
+    } else {
+        throw std::out_of_range("Dimensoes da matriz sao invalidas");
+    }
 }
 
 void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
@@ -131,7 +130,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
 int main()
 {
-  vector<SparseMatrix> matriz;
+  vector<SparseMatrix*> matriz;
 
   cout << "------- Sistema de Matrix -------" << endl
        << "Digite 'ajuda' para ver a lista de comandos" << endl;
@@ -166,8 +165,6 @@ int main()
     else if(cmd == "ler"){
       string arquivo;
       ss >> arquivo;
-
-      
 
       SparseMatrix m(0, 0);
       readSparseMatrix(m, arquivo);
@@ -238,30 +235,31 @@ int main()
         throw out_of_range("Dados passados nao correspodem a alguma matriz no sistema.")
       }
     }
-    else if(cmd == "limpar")
-    {
+    else if(cmd == "limpar"){
       int A;
       ss >> A;
 
-      if (A >= 0 && A < matriz.size())
-      {
-        matriz[A].clear();
-
-        cout << "Matriz[" << A << "] limpa com sucesso" << endl;
+      if (A >= 0 && A < matriz.size()) {
+        delete matriz[A];        // Libera a memória da matriz
+        matriz.erase(matriz.begin() + A);  // Remove o ponteiro do vetor
+        cout << "Matriz[" << A << "] foi removida do sistema!" << endl;
       }
-      else {
-        throw out_of_range("Indice passado nao valido!");
+     else {
+        throw std::out_of_range("Indice passado nao valido!");
       }
-    }
     else if(cmd == "limparM"){
-      for (int i = 0; i < matriz.size(); i++)
-      {
-        matriz[i].clear();
+      if (matriz.empty()) {
+        cout << "Nao ha matrizes para limpar." << endl;
+      } 
+      else {
+        for (auto ptr : matriz) {
+          delete ptr;  // Libera a memória alocada para cada matriz
+        }
+        matriz.clear();  // Remove todos os ponteiros do vetor
+        cout << "Todas as matrizes foram removidas do sistema!" << endl;
       }
-      cout << "Sistema limpo com sucesso!" << endl;
     }
-    else if (cmd == "listar")
-    {
+    else if (cmd == "listar"){
       for (int i = 0; i < matriz.size(); i++)
       {
         matriz[i].print();
@@ -269,6 +267,5 @@ int main()
       }
       cout << "Todas as matrizes foram mostradas com sucesso!" << endl;
     }
-    
   }
-} 
+}
