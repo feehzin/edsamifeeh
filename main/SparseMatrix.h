@@ -118,7 +118,7 @@ class SparseMatrix {
     }
     
     Node* prevElem = atual_L;
-    Node* currElem = currRow->direita;
+    Node* currElem = atual_L->direita;
     while (currElem != atual_L && currElem->colunas < j) {
       prevElem = currElem;
       currElem = currElem->direita;

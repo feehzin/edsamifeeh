@@ -65,7 +65,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
       Node* coluna_B = linha_A->direita; // Primeira coluna da linha de A
       Node* coluna_A = linha_B->direita; // Primeira linha de B
       while(coluna_A != linha_A && coluna_B != linha_B){
-        if(coluna_A->colunas == coluna_B->colunas){ // Se as colunas forem iguais, soma os valores
+        if(coluna_A->coluna == coluna_B->coluna){ // Se as colunas forem iguais, soma os valores
           double soma = coluna_A->valor + coluna_B->valor;
           if(soma != 0){
             C.insert(coluna_A->linhas, coluna_A->colunas, soma);
@@ -73,23 +73,23 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
           coluna_A = coluna_A->direita; // Avança para a próxima coluna de A
           coluna_B = coluna_B->direita; // Avança para a próxima coluna de B
         }
-        else if(coluna_A->colunas < coluna_B->colunas){
+        else if(coluna_A->coluna < coluna_B->coluna){
           // Se a coluna A for melhor, insere o valor de A 
-          C.insert(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
+          C.insert(coluna_A->linha, coluna_A->coluna, coluna_A->valor);
           coluna_A = coluna_A->direita; // Avança para a próxima coluna de A
         }else{
           // Se a coluna de B for menor, insere a o valor eem B
-          C.insert(coluna_B->linhas, coluna_B->colunas, coluna_B->valor);
+          C.insert(coluna_B->linha, coluna_B->coluna, coluna_B->valor);
           coluna_B = coluna_B->direita; // Avança para a próximma coluna de B
         }
       }
       // Adicionam as colunas restantes de A e B, se houver
       while(coluna_A != linha_A){
-        C.insert(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
+        C.insert(coluna_A->linha, coluna_A->coluna, coluna_A->valor);
         coluna_A = coluna_A->direita;
       }
       while(coluna_B != linha_B){
-        C.insert(coluna_B->linhas, coluna_B->colunas, coluna_B->valor);
+        C.insert(coluna_B->linha, coluna_B->coluna, coluna_B->valor);
         coluna_B = coluna_B->direita;
       }
       // Avança para a próxima linha de A e B
@@ -111,16 +111,16 @@ SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
   for(Node* element_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo){
     // Percorre todos os elementos da linha A
     for(Node* element_A = linha_A->direita; element_A != linha_A; element_A = element_A->direita){
-    int i = element_A->linhas;
-    int j = element_A->colunas;
+    int i = element_A->linha;
+    int j = element_A->coluna;
     double valor_A = element_A->valor;
 
     // Percorre a coluna correspondente em B
     Node* coluna_B = B.getHead()->abaixo;
-    while(coluna_B->linhas != j && coluna_B != B.getHead()){
+    while(coluna_B->linha != j && coluna_B != B.getHead()){
       coluna_B = coluna_B->abaixo;
     }
-    if(coluna_B->linhas == j){
+    if(coluna_B->linha == j){
       for(Node* element_B = coluna_B->direita; element_B != coluna_B; element_B = element_B->direita){
         int s = element_B->colunas;
         double valorB = element_B->valor;
@@ -287,7 +287,7 @@ int main()
       break;
     }
     else {
-      cout << "Comando nao reconhecido. Digite 'ajuda' para ver a lista de comandos." << endl;
+      cout << "Comando não reconhecido. Digite 'ajuda' para ver a lista de comandos." << endl;
     }
   }
 }
