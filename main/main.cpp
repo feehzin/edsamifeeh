@@ -68,7 +68,7 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
         if(coluna_A->colunas == coluna_B->colunas){ // Se as colunas forem iguais, soma os valores
           double soma = coluna_A->valor + coluna_B->valor;
           if(soma != 0){
-            C.inserte(coluna_A->linhas, coluna_A->colunas, soma);
+            C.insert(coluna_A->linhas, coluna_A->colunas, soma);
           }
           coluna_A = coluna_A->direita; // Avança para a próxima coluna de A
           coluna_B = coluna_B->direita; // Avança para a próxima coluna de B
@@ -85,11 +85,11 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
       }
       // Adicionam as colunas restantes de A e B, se houver
       while(coluna_A != linha_A){
-        C.inserte(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
-        caluna_A = coluna_A->direita;
+        C.insert(coluna_A->linhas, coluna_A->colunas, coluna_A->valor);
+        coluna_A = coluna_A->direita;
       }
       while(coluna_B != linha_B){
-        C.inserte(coluna_B->linhas, coluna_B->colunas, coluna_B->valor);
+        C.insert(coluna_B->linhas, coluna_B->colunas, coluna_B->valor);
         coluna_B = coluna_B->direita;
       }
       // Avança para a próxima linha de A e B
@@ -113,7 +113,7 @@ SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
     for(Node* element_A = linha_A->direita; element_A != linha_A; element_A = element_A->direita){
     int i = element_A->linhas;
     int j = element_A->colunas;
-    double valorA = element_A->valor;
+    double valor_A = element_A->valor;
 
     // Percorre a coluna correspondente em B
     Node* coluna_B = B.getHead()->abaixo;
@@ -205,7 +205,7 @@ int main()
         matriz[A].print();
       }
       else {
-        throw out_of_range("A matriz com o indice [" << A << "] nao encontra-se listada no sistema.");
+        throw out_of_range("A matriz com o indice passado nao encontra-se listada no sistema.");
       }
     } 
     else if(cmd == "somar"){
@@ -220,7 +220,7 @@ int main()
         matriz.back().print();
       }
       else {
-        throw out_of_range("Indices passados sao invalidos.") << endl;
+        throw out_of_range("Indices passados sao invalidos.");
       }
     }
     else if(cmd == "multi"){
@@ -235,7 +235,7 @@ int main()
         matriz.back().print();
       }
       else {
-        throw out_of_range("Indices passados sao invalidos.") << endl;
+        throw out_of_range("Indices passados sao invalidos.");
       }
     }
     else if(cmd == "mudar"){
@@ -250,7 +250,7 @@ int main()
         cout << "Valor atualizado na matriz[" << A << "] com sucesso!" << endl;
       }
       else {
-        throw out_of_range("Dados passados nao correspodem a alguma matriz no sistema.")
+        throw out_of_range("Dados passados nao correspodem a alguma matriz no sistema.");
       }
     }
     else if (cmd == "limpar") {

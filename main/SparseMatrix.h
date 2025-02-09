@@ -105,11 +105,11 @@ class SparseMatrix {
     }
     Node* prev_L = m_head;
     Node* atual_L = m_head->abaixo;
-    while (atual_L != m_head && atual_L->abaixo->linha < i) {
+    while (atual_L != m_head && atual_L->abaixo->linhas < i) {
       prev_L = atual_L;
       atual_L = atual_L->abaixo;
     }
-    if (atual_L == m_head || atual_L->linha != i) {
+    if (atual_L == m_head || atual_L->linhas != i) {
       Node* novaLinha = new Node(i, 0, 0);
       novaLinha->abaixo = atual_L;
       prev_L->abaixo = novaLinha;
@@ -117,9 +117,9 @@ class SparseMatrix {
       atual_L = novaLinha;
     }
     
-    Node* prevElem = currRow;
+    Node* prevElem = atual_L;
     Node* currElem = currRow->direita;
-    while (currElem != currRow && currElem->colunas < j) {
+    while (currElem != atual_L && currElem->colunas < j) {
       prevElem = currElem;
       currElem = currElem->direita;
     }
@@ -143,13 +143,13 @@ class SparseMatrix {
     while (atual_L != m_head && atual_L->linha < i) {
         atual_L = atual_L->abaixo;
     }
-    if (atual_L == m_head || atual_L->linha != i) return 0.0;
+    if (atual_L == m_head || atual_L->linhas != i) return 0.0;
     
     Node* atual_C = atual_L->direita;
-    while (atual_C != atual_L && atual_C->coluna < j) {
+    while (atual_C != atual_L && atual_C->colunas < j) {
         atual_C = atual_C->direita;
     }
-    if (atual_C == atual_L || atual_C->coluna != j) return 0.0;
+    if (atual_C == atual_L || atual_C->colunas != j) return 0.0;
     return atual_C->valor;
 }
     // Exibe a matriz no terminal
