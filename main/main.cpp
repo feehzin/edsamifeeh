@@ -113,20 +113,39 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
   }
 
      
- SparseMatrix multiply(SparseMatrix& A, SNodeparseMatrix& B){
-    if (A.getColunas()!= B.getLinhas()){
-      throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
+SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
+  if (A.getColunas()!= B.getLinhas()){
+    throw std::out_of_range("O número de colunas de A deve ser igual ao número de  linhas de B para executar a multiplicação.");
+  }
+
+  SparseMatrix C(A.getLinhas(), B.getColunas());  
+
+  // percorre todas as linhas de A
+  for(Node* element_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo){
+    // Percorre todos os elementos da linha A
+    for(Node* element_A = linha_A->direita; element_A != linha_A; element_A = element_A->direita){
+    int i = element_A->linhas;
+    int j = element_A->colunas;
+    double valorA = element_A->valor;
+
+    // Percorre a coluna correspondente em B
+    Node* coluna_B = B.getHead()->abaixo;
+    while(coluna_B->linhas != j && coluna_B != B.getHead()){
+      coluna_B = coluna_B->abaixo;
     }
+    if(coluna_B->linhas == j){
+      for(Node* element_B = coluna_B->direita; element_B != coluna_B; element_B = element_B->direita){
+        int s = element_B->colunas;
+        double valorB = element_B->valor;
 
-    SparseMatrix C(A.getLinhas(), B.getColunas());  
-
-    // loop para percorrer todas a linhas de A
-    for(Node* element_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo){
-      int i = element_A->linhas;
-      int j = element_A->colunas;
-      double valorA = element_A->valor;
+        double valorC = C.get(i, s) + (valor_A * valor_B);
+        C.insert(i, s, valor, C);
+        }
+      }
     }
   }
+  return C;
+}
 
 int main()
 {
