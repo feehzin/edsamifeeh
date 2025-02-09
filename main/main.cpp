@@ -8,19 +8,6 @@
 #include "SparseMatrix.h"
 using namespace std;
 
-void criar(istringstream ss){
-  int M, N;
-    ss >> M >> N;
-
-    if (M > 0 && N > 0) {
-        SparseMatrix* novaMatriz = new SparseMatrix(M, N);  // Aloca dinamicamente
-        matriz.push_back(novaMatriz);
-        cout << "Matriz " << matriz.size() - 1 << " adicionada com sucesso!" << endl;
-    } else {
-        throw std::out_of_range("Dimensoes da matriz sao invalidas");
-    }
-}
-
 void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
     ifstream arquivo;
 
@@ -130,18 +117,16 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
 int main()
 {
-  vector<SparseMatrix*> matriz;
+  vector<SparseMatrix> matriz;
 
   cout << "------- Sistema de Matrix -------" << endl
        << "Digite 'ajuda' para ver a lista de comandos" << endl;
   
-  while (true) {
-    string comando;
-    getline(cin, comando);
+  string comando;
 
+  while (getline(cin, comando)) {
     istringstream ss(comando);
     string cmd;
-
     ss >> cmd;
 
     if(cmd == "ajuda")
@@ -160,39 +145,48 @@ int main()
            << "-------------------------------------------------------------------------------------------" << endl;
     }
     else if(cmd == "criar"){
-      criar(ss);
+      int M, N;
+      ss >> M >> N;
+
+      if (M > 0 && N > 0) {
+        SparseMatrix novaMatriz(M, N); 
+        matriz.push_back(novaMatriz);
+        cout << "Matriz " << matriz.size() - 1 << " adicionada com sucesso!" << endl;
+      } 
+      else {
+        throw std::out_of_range("Dimensoes da matriz sao invalidas");
+      }
     }
     else if(cmd == "ler"){
-      string arquivo;
-      ss >> arquivo;
+      string nomeArquivo;
+      ss >> nomeArquivo;
+      
+      int linhas, colunas;
 
-      SparseMatrix m(0, 0);
-      readSparseMatrix(m, arquivo);
+      ifstream arquivo(nomeArquivo);
+      if (!arquivo.is_open()) {
+        cout << "Erro: nao foi possivel abrir o arquivo " << nomeArquivo << endl;
+        continue;
+      }
+      
+      arquivo >> linhas >> colunas;
+      arquivo.close();
+
+      SparseMatrix m(linhas, colunas);
+      readSparseMatrix(m, nomeArquivo);
       matriz.push_back(m);
 
-      cout << "Nova matriz, com parametros do arquivo (" << arquivo << ") listada no sistema com sucesso!" << endl;
+      cout << "Nova matriz, com parametros do arquivo (" << nomeArquivo << ") listada no sistema com sucesso!" << endl;
     }
     else if(cmd == "mostre"){
       int A;
       ss >> A;
 
-      if (A > 0 && A < matriz.size()){
+      if (A >= 0 && A < matriz.size()){
         matriz[A].print();
       }
       else {
         throw out_of_range("A matriz com o indice [" << A << "] nao encontra-se listada no sistema.");
-
-        char n;
-        cout << "gostaria de adiciona-la? [y/n]: ";
-        cin << n;
-
-        if (n == 'y')
-        {
-          criar(ss);
-        }
-        else {
-          cout << "Operacao nao realizada." << endl;
-        }
       }
     } 
     else if(cmd == "somar"){
