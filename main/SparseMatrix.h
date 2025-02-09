@@ -79,8 +79,14 @@ class SparseMatrix {
   
     //Destrutor: libera a memória alocada dinamicamente.
     ~SparseMatrix() {
-      clear();
-      delete m_head;
+      clear(); // Remove todos os elementos
+      Node* atual_L = m_head->abaixo;
+      while (atual_L != m_head) {
+          Node* aux = atual_L;
+          atual_L = atual_L->abaixo;
+          delete aux;
+      }
+      delete m_head; // Remove o nó sentinela
   }
     // Retorna o número de linhas de uma matriz.
     int getLinhas() const { 
@@ -105,7 +111,7 @@ class SparseMatrix {
     }
     Node* prev_L = m_head;
     Node* atual_L = m_head->abaixo;
-    while (atual_L != m_head && atual_L->abaixo->linha < i) {
+    while (atual_L != m_head && atual_L->linha < i) {
       prev_L = atual_L;
       atual_L = atual_L->abaixo;
     }
@@ -166,35 +172,35 @@ class SparseMatrix {
     //Limpa a matriz, setando todos os seus valores para 0.0.
     void clear() {
        // Limpa as linhas
-    Node* rowHead = m_head->abaixo;  // Começa da primeira linha (abaixo do sentinela)
-    while (rowHead != m_head) {      // Enquanto não chegar ao sentinela
-        Node* current = rowHead->direita;  // Primeira célula da linha
-        while (current != rowHead) {       // Enquanto não voltar ao cabeçalho da linha
-            Node* temp = current;
-            current = current->direita;    // Move para o próximo elemento na linha
-            delete temp;  // Libera o nó
-        }
-        Node* tempRow = rowHead;
-        rowHead = rowHead->abaixo;  // Move para a próxima linha
-        delete tempRow;  // Libera o cabeçalho da linha
-    }
-
-    // Limpa as colunas
-    Node* colHead = m_head->direita;  // Começa da primeira coluna (direita do sentinela)
-    while (colHead != m_head) {       // Enquanto não chegar ao sentinela
-        Node* current = colHead->abaixo;  // Primeira célula da coluna
-        while (current != colHead) {       // Enquanto não voltar ao cabeçalho da coluna
-            Node* temp = current;
-            current = current->abaixo;    // Move para o próximo elemento na coluna
-            delete temp;  // Libera o nó
-        }
-        Node* tempCol = colHead;
-        colHead = colHead->direita;  // Move para a próxima coluna
-        delete tempCol;  // Libera o cabeçalho da coluna
-    }
-
-    // Libera o nó sentinela
-    delete m_head;
+       Node* rowHead = m_head->abaixo;  
+       while (rowHead != m_head) {      
+           Node* current = rowHead->direita;  
+           while (current != rowHead) {       
+               Node* temp = current;
+               current = current->direita;    
+               delete temp;  
+           }
+           Node* tempRow = rowHead;
+           rowHead = rowHead->abaixo;  
+           delete tempRow;  
+       }
+    
+       // Limpa as colunas
+       Node* colHead = m_head->direita;  
+       while (colHead != m_head) {       
+           Node* current = colHead->abaixo;  
+           while (current != colHead) {       
+               Node* temp = current;
+               current = current->abaixo;    
+               delete temp;  
+           }
+           Node* tempCol = colHead;
+           colHead = colHead->direita;  
+           delete tempCol;  
+       }
+    
+       // Libera o nó sentinela
+       delete m_head;
     }
   
 };
