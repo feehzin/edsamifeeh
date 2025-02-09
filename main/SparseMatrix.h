@@ -54,7 +54,7 @@ class SparseMatrix {
             this->insert(matElem->linhas, matElem->colunas, matElem->valor);
             matElem = matElem->direita;
           }
-          matM_Head = otherRow->abaixo;
+          matM_Head = matM_Head->abaixo;
       }
     }
 
@@ -123,7 +123,7 @@ class SparseMatrix {
       prevElem = currElem;
       currElem = currElem->direita;
     }
-    if (currElem != currRow && currElem->colunas == j) {
+    if (currElem != atual_L && currElem->colunas == j) {
       // Se o elemento já existe, atualiza seu valor
       currElem->valor = value;
     }
@@ -177,7 +177,7 @@ class SparseMatrix {
           delete temp;
         }
         Node* tempM_Head = atualM_Head;
-        atualM_Head = atualM_Head->direita;
+        atualM_Head = atualM_Head->abaixo;
         delete tempM_Head;
       }
       m_head->abaixo = m_head;

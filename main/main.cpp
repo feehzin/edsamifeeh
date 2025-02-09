@@ -62,13 +62,13 @@ void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
 
     // Percorre as linhas das matrizes A e B
     while(linha_A != A.getHead()){
-      Node* coluna_B = linha_A->direita; // Primeira coluna da linha de A
-      Node* coluna_A = linha_B->direita; // Primeira linha de B
+      Node* coluna_A = linha_A->direita; // Primeira coluna da linha de A
+      Node* coluna_B = linha_B->direita; // Primeira linha de B
       while(coluna_A != linha_A && coluna_B != linha_B){
         if(coluna_A->coluna == coluna_B->coluna){ // Se as colunas forem iguais, soma os valores
           double soma = coluna_A->valor + coluna_B->valor;
           if(soma != 0){
-            C.insert(coluna_A->linhas, coluna_A->colunas, soma);
+            C.insert(coluna_A->linha, coluna_A->coluna, soma);
           }
           coluna_A = coluna_A->direita; // Avança para a próxima coluna de A
           coluna_B = coluna_B->direita; // Avança para a próxima coluna de B
@@ -108,7 +108,7 @@ SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
   SparseMatrix C(A.getLinhas(), B.getColunas());  
 
   // percorre todas as linhas de A
-  for(Node* element_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo){
+  for(Node* linha_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo){
     // Percorre todos os elementos da linha A
     for(Node* element_A = linha_A->direita; element_A != linha_A; element_A = element_A->direita){
     int i = element_A->linha;
@@ -122,11 +122,11 @@ SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
     }
     if(coluna_B->linha == j){
       for(Node* element_B = coluna_B->direita; element_B != coluna_B; element_B = element_B->direita){
-        int s = element_B->colunas;
+        int s = element_B->coluna;
         double valorB = element_B->valor;
 
         double valorC = C.get(i, s) + (valor_A * valor_B);
-        C.insert(i, s, valor, C);
+        C.insert(i, s, valorC);
         }
       }
     }
@@ -227,7 +227,7 @@ int main()
       int A, B;
       ss >> A >> B;
 
-      if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()){
+      if (A >= 1 && A < matriz.size() && B >= 1 && B < matriz.size()){
         SparseMatrix resultado = multiply(matriz[A],matriz[B]);
         matriz.push_back(resultado);
 
@@ -239,13 +239,13 @@ int main()
       }
     }
     else if(cmd == "mudar"){
-      int A, i, j;
+      unsigned A, i, j;
       double valor;
       ss >> A >> i >> j >> valor;
 
       if (A >= 0 && A < matriz.size() && i > 1 && i <= matriz[A].getLinhas() && j > 1 && j <= matriz[A].getColunas())
       {
-        matriz[A].insert(i, j);
+        matriz[A].insert(i, j, valor);
 
         cout << "Valor atualizado na matriz[" << A << "] com sucesso!" << endl;
       }
@@ -275,7 +275,7 @@ int main()
       }
   }
     else if (cmd == "listar"){
-      for (int i = 0; i < matriz.size(); i++)
+      for (unsigned i = 0; i < matriz.size(); i++)
       {
         cout << "Matriz[" << i << "]:" << endl;
         matriz[i].print();
