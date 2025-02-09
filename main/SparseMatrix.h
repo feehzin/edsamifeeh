@@ -165,22 +165,36 @@ class SparseMatrix {
 
     //Limpa a matriz, setando todos os seus valores para 0.0.
     void clear() {
-      Node* atualM_Head = m_head->abaixo;
-      
-      while (atualM_Head != m_head)
-      {
-        Node* atualElem = atualM_Head->direita;
-        while (atualElem != atualM_Head)
-        {
-          Node* temp = atualElem;
-          atualElem = atualElem->direita;
-          delete temp;
+       // Limpa as linhas
+    Node* rowHead = m_head->abaixo;  // Começa da primeira linha (abaixo do sentinela)
+    while (rowHead != m_head) {      // Enquanto não chegar ao sentinela
+        Node* current = rowHead->direita;  // Primeira célula da linha
+        while (current != rowHead) {       // Enquanto não voltar ao cabeçalho da linha
+            Node* temp = current;
+            current = current->direita;    // Move para o próximo elemento na linha
+            delete temp;  // Libera o nó
         }
-        Node* tempM_Head = atualM_Head;
-        atualM_Head = atualM_Head->abaixo;
-        delete tempM_Head;
-      }
-      m_head->abaixo = m_head;
+        Node* tempRow = rowHead;
+        rowHead = rowHead->abaixo;  // Move para a próxima linha
+        delete tempRow;  // Libera o cabeçalho da linha
+    }
+
+    // Limpa as colunas
+    Node* colHead = m_head->direita;  // Começa da primeira coluna (direita do sentinela)
+    while (colHead != m_head) {       // Enquanto não chegar ao sentinela
+        Node* current = colHead->abaixo;  // Primeira célula da coluna
+        while (current != colHead) {       // Enquanto não voltar ao cabeçalho da coluna
+            Node* temp = current;
+            current = current->abaixo;    // Move para o próximo elemento na coluna
+            delete temp;  // Libera o nó
+        }
+        Node* tempCol = colHead;
+        colHead = colHead->direita;  // Move para a próxima coluna
+        delete tempCol;  // Libera o cabeçalho da coluna
+    }
+
+    // Libera o nó sentinela
+    delete m_head;
     }
   
 };
