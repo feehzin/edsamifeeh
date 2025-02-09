@@ -8,30 +8,39 @@
 #include "SparseMatrix.h"
 using namespace std;
 
-void readSparseMatrix(SparseMatrix& m, std::string& nome_do_arquivo) {
-  ifstream arquivo(nome_do_arquivo);
-  
-  if (!arquivo.is_open()) {
-      cerr << "Erro: não foi possível abrir o arquivo " << nome_do_arquivo << endl;
-      return;
-  }
+  void readSparseMatrix(SparseMatrix& m, const std::string& nome_do_arquivo) {
+    ifstream arquivo(nome_do_arquivo);
+    
+    if (!arquivo.is_open()) {
+        cerr << "Erro: não foi possível abrir o arquivo " << nome_do_arquivo << endl;
+        return;
+    }
 
-  int linhas, colunas;
-  arquivo >> linhas >> colunas;
+    int linhas, colunas;
+    arquivo >> linhas >> colunas;
 
-  int i, j;
-  double valor;
+    // Verifica se as dimensões do arquivo batem com a matriz existente
+    if (linhas != m.getLinhas() || colunas != m.getColunas()) {
+        cerr << "Erro: dimensões do arquivo não correspondem à matriz fornecida." << endl;
+        arquivo.close();
+        return;
+    }
 
-  while (arquivo >> i >> j >> valor) {
-      if (i < 1 || i > linhas || j < 1 || j > colunas) {
-          cerr << "Erro: índices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
-          continue;
-      }
+    int i, j;
+    double valor;
 
-      m->insert(i, j, valor);  // Insere diretamente sem verificar se é zero, pois a matriz já não armazena zeros
-  }
-  
-  arquivo.close();
+    // Limpa a matriz antes de inserir novos valores
+    m.clear();  // Você precisa implementar essa função na SparseMatrix
+
+    while (arquivo >> i >> j >> valor) {
+        if (i < 1 || i > linhas || j < 1 || j > colunas) {
+            cerr << "Erro: índices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
+            continue;
+        }
+        m.insert(i, j, valor);  
+    }
+
+    arquivo.close();
 }
   
   /**Função que soma matrizes esparsas */
