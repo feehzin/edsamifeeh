@@ -8,42 +8,36 @@
 #include "SparseMatrix.h"
 using namespace std;
 
-void readSparseMatrix(SparseMatrix& m, std::string nome_do_arquivo){
-    ifstream arquivo;
+void readSparseMatrix(SparseMatrix*& m, const std::string& nome_do_arquivo) {
+  ifstream arquivo(nome_do_arquivo);
+  
+  if (!arquivo.is_open()) {
+      cerr << "Erro: não foi possível abrir o arquivo " << nome_do_arquivo << endl;
+      return;
+  }
 
-    arquivo.open(nome_do_arquivo);
+  int linhas, colunas;
+  arquivo >> linhas >> colunas;
 
-    if (!arquivo.is_open()) {
-        cerr << "Erro: nao foi possivel abrir: " << nome_do_arquivo << endl;
-        return;
-    }
+  // Se a matriz já existe e tem dimensões diferentes, precisa ser recriada
+  if (m == nullptr || linhas != m->getLinhas() || colunas != m->getColunas()) {
+      delete m;  // Libera a memória da matriz antiga
+      m = new SparseMatrix(linhas, colunas);  // Cria uma nova matriz com as dimensões corretas
+  }
 
-    int linhas, colunas;
-    arquivo >> linhas >> colunas;
+  int i, j;
+  double valor;
 
-    if (linhas != m.getLinhas() || colunas != m.getColunas()){
-        cerr << "Erro: dimensoes do arquivo nao correspodem a matriz dada" << endl; //o uso de cerr é para mensagens de erro
-        arquivo.close();
-        return;
-    }
-    
-    int i, j;
-    double valor;
+  while (arquivo >> i >> j >> valor) {
+      if (i < 1 || i > linhas || j < 1 || j > colunas) {
+          cerr << "Erro: índices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
+          continue;
+      }
 
-    while (arquivo >> i >> j >> valor){
-        if (i < 1 || i > linhas || j < 1 || j > colunas){
-            cerr << "Erro: indices fora do limite esperado (" << linhas << ", " << colunas << ")" << endl;
-            continue;
-        }
-      
-        if (valor == 0){
-            continue;
-        }
-      
-        m.insert(i, j, valor);
-    }
-    
-    arquivo.close();
+      m->insert(i, j, valor);  // Insere diretamente sem verificar se é zero, pois a matriz já não armazena zeros
+  }
+  
+  arquivo.close();
 }
   
   /**Função que soma matrizes esparsas */
@@ -151,14 +145,14 @@ int main()
     if(cmd == "ajuda")
     {
       cout << "------------------------------------ Lista de Comandos------------------------------------" << endl
-           << "criar matriz M N......... criar matriz vazia com M linhas e N colunas" << endl
-           << "ler m.txt................ le arquivo de texto, armazenando seus parametros em uma matriz"
-           << "mostre matriz A.......... mostra a matriz A" << endl
-           << "somar matrizes A B....... soma a matriz A com a matriz B" << endl
-           << "multi matrizes A B....... multiplica a matriz A com a matriz B" << endl
+           << "criar M N................ criar matriz vazia com M linhas e N colunas" << endl
+           << "ler m.txt................ ler arquivo de texto, armazenando seus parametros em uma matriz" << endl
+           << "mostre A................. mostra a matriz A" << endl
+           << "somar A B................ soma a matriz A com a matriz B" << endl
+           << "multi A B................ multiplica a matriz A com a matriz B" << endl
            << "mudar A i j valor........ substitui o valor no indice i (linha), j (coluna) na matriz A" << endl
            << "listar................... mostra todas as matrizes do sistema"
-           << "limpar matriz A.......... limpa a matriz A" << endl
+           << "limpar A................. limpa a matriz A" << endl
            << "limparM.................. limpa todas as matrizes do sistema" << endl
            << "sair..................... terminar sessao" << endl
            << "-------------------------------------------------------------------------------------------" << endl;
@@ -284,6 +278,7 @@ int main()
       cout << "Todas as matrizes foram mostradas com sucesso!" << endl;
     }
     else if (cmd == "sair") {
+      cout << "saindo..." << endl;
       break;
     }
     else {
