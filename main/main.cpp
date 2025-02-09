@@ -215,6 +215,8 @@ int main()
       if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()){
         SparseMatrix resultado = sum(matriz[A],matriz[B]);
         matriz.push_back(resultado);
+
+        cout << "Resultado da soma:" << endl;
         matriz.back().print();
       }
       else {
@@ -228,6 +230,8 @@ int main()
       if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()){
         SparseMatrix resultado = multiply(matriz[A],matriz[B]);
         matriz.push_back(resultado);
+
+        cout << "Resultado da multiplicacao:" << endl;
         matriz.back().print();
       }
       else {
@@ -235,8 +239,9 @@ int main()
       }
     }
     else if(cmd == "mudar"){
-      int A, i, j, value;
-      ss >> A >> i >> j >> 0;
+      int A, i, j;
+      double valor;
+      ss >> A >> i >> j >> valor;
 
       if (A >= 0 && A < matriz.size() && i > 1 && i <= matriz[A].getLinhas() && j > 1 && j <= matriz[A].getColunas())
       {
@@ -253,34 +258,36 @@ int main()
       ss >> A;
   
       if (A >= 0 && A < matriz.size()) {
-          delete matriz[A];        // Libera a memória da matriz alocada dinamicamente
-          matriz.erase(matriz.begin() + A);  // Remove o ponteiro do vetor
-          cout << "Matriz[" << A << "] foi removida do sistema!" << endl;
+        matriz.erase(matriz.begin() + A);
+        cout << "Matriz[" << A << "] foi removida do sistema!" << endl;
       } 
       else {
-          throw std::out_of_range("Índice passado não válido!");
+        throw std::out_of_range("Índice passado nao valido!");
       }
     }
     else if (cmd == "limparM") {
       if (matriz.empty()) {
-          cout << "Não há matrizes para limpar." << endl;
+        cout << "Não há matrizes para limpar." << endl;
       } 
       else {
-          for (auto ptr : matriz) {
-            delete ptr;  // Libera a memória alocada para cada matriz
-          }
-          matriz.clear();  // Remove todos os ponteiros do vetor
-          cout << "Todas as matrizes foram removidas do sistema!" << endl;
+        matriz.clear();  // Remove todos os ponteiros do vetor
+        cout << "Todas as matrizes foram removidas do sistema!" << endl;
       }
   }
-  
     else if (cmd == "listar"){
       for (int i = 0; i < matriz.size(); i++)
       {
+        cout << "Matriz[" << i << "]:" << endl;
         matriz[i].print();
         cout << endl;
       }
       cout << "Todas as matrizes foram mostradas com sucesso!" << endl;
+    }
+    else if (cmd == "sair") {
+      break;
+    }
+    else {
+      cout << "Comando nao reconhecido. Digite 'ajuda' para ver a lista de comandos." << endl;
     }
   }
 }
