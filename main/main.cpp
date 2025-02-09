@@ -123,7 +123,7 @@ SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B){
     if(coluna_B->linha == j){
       for(Node* element_B = coluna_B->direita; element_B != coluna_B; element_B = element_B->direita){
         int s = element_B->coluna;
-        double valorB = element_B->valor;
+        double valor_B = element_B->valor;
 
         double valorC = C.get(i, s) + (valor_A * valor_B);
         C.insert(i, s, valorC);

@@ -40,8 +40,8 @@ class SparseMatrix {
 
     // Construtor de cópia (cópia profunda)
     SparseMatrix(const SparseMatrix& mat) {
-      linhas = mat.linha;
-      colunas = mat.coluna;
+      linhas = mat.linhas;
+      colunas = mat.colunas;
       m_head = new Node(0, 0, 0);
       m_head->direita = m_head;
       m_head->abaixo = m_head;
@@ -62,8 +62,8 @@ class SparseMatrix {
     SparseMatrix& operator=(const SparseMatrix& other) {
       if (this != &other) {
           clear();
-          linhas = other.linha;
-          colunas = other.coluna;
+          linhas = other.linhas;
+          colunas = other.colunas;
           Node* otherRow = other.m_head->abaixo;
           while (otherRow != other.m_head) {
               Node* otherElem = otherRow->direita;
