@@ -15,194 +15,138 @@
 // Classe que respresenta a matriz esparsa
 class SparseMatrix {
   private:
-    Node* m_head; // Nó sentinela
-    int linhas, colunas; // Dimensões da matriz esparsa
-
+      Node* m_head;
+      int linhas, colunas;
+  
   public:
-    /*Construtor (cria uma matriz vazia).
-    Para m Número de linhas.
-    Para n Número de colunas.
-    throws std::out_of_range se os valores forem inválidos.*/
-    SparseMatrix(int m, int n){
-      if(m <= 0 || n <= 0)
-      {
-        throw std::out_of_range("Numero de linhas e/ou colunas invalidas.");
+      // Construtor
+      SparseMatrix(int m, int n) 
+        : linhas(m), colunas(n) {
+          m_head = new Node(0, 0, 0);  // Criar o nó cabeça
+          m_head->abaixo = m_head;
+          m_head->direita = m_head;
       }
-      linhas = m;
-      colunas = n;
-      m_head = new Node(0, 0, 0);
-      if (!m_head){
-        throw std::bad_alloc(); // Garante que a alocação foi bem-sucedida
-    }
-      m_head->direita = m_head; // Lista circular na horizontal
-      m_head->abaixo = m_head; // Lista circular na vertical
-    }
-
-    // Construtor de cópia (cópia profunda)
-    SparseMatrix(const SparseMatrix& mat) {
-      linhas = mat.linhas;
-      colunas = mat.colunas;
-      m_head = new Node(0, 0, 0);
-      m_head->direita = m_head;
-      m_head->abaixo = m_head;
-
-      // Copia os elementos não nulos da outra matriz
-      Node* matM_Head = mat.m_head->abaixo;
-      while (matM_Head != mat.m_head) {
-          Node* matElem = matM_Head->direita;
-          while (matElem != matM_Head) {
-            this->insert(matElem->linha, matElem->coluna, matElem->valor);
-            matElem = matElem->direita;
-          }
-          matM_Head = matM_Head->abaixo;
-      }
-    }
-
-    // Operador de atribuição (para cópia profunda)
-    SparseMatrix& operator=(const SparseMatrix& other) {
-      if (this != &other) {
-          clear();
-          linhas = other.linhas;
-          colunas = other.colunas;
-          Node* otherRow = other.m_head->abaixo;
-          while (otherRow != other.m_head) {
-              Node* otherElem = otherRow->direita;
-              while (otherElem != otherRow) {
-                  this->insert(otherElem->linha, otherElem->coluna, otherElem->valor);
-                  otherElem = otherElem->direita;
+  
+      // Destrutor
+      ~SparseMatrix() {
+          Node* linha = m_head->abaixo;
+          while (linha != m_head) {
+              Node* coluna = linha->direita;
+              while (coluna != linha) {
+                  Node* temp = coluna;
+                  coluna = coluna->direita;
+                  delete temp;
               }
-              otherRow = otherRow->abaixo;
+              Node* temp = linha;
+              linha = linha->abaixo;
+              delete temp;
           }
+          delete m_head;
       }
-      return *this;
-  }
   
-    //Destrutor: libera a memória alocada dinamicamente.
-    ~SparseMatrix() {
-      clear(); // Remove todos os elementos
-      Node* atual_L = m_head->abaixo;
-      while (atual_L != m_head) {
-          Node* aux = atual_L;
-          atual_L = atual_L->abaixo;
-          delete aux;
-      }
-      delete m_head; // Remove o nó sentinela
-  }
-    // Retorna o número de linhas de uma matriz.
-    int getLinhas() const { 
-      return linhas; 
-    }
+      // Função para inserir um valor na matriz esparsa
+      void insert(int i, int j, double value) {
+        // Cria um novo nó
+        Node* nova = new Node(i, j, value);
 
-    // Retorna o número de colunas de uma matriz.
-    int getColunas() const {
-       return colunas; 
-    }
-  
-    // Retorna o ponteiro para o nó sentinela da matriz.
-    Node* getHead() const {
-       return m_head; 
-    }
-
-    // Função que insere um valor na matriz esparsa
-    void insert(int i, int j, double value){
-    if (value == 0) return;
-    if (i < 1 || i > linhas || j < 1 || j > colunas) {
-      throw std::out_of_range("Índices fora dos limites da matriz.");
-    }
-    Node* prev_L = m_head;
-    Node* atual_L = m_head->abaixo;
-    while (atual_L != m_head && atual_L->linha < i) {
-      prev_L = atual_L;
-      atual_L = atual_L->abaixo;
-    }
-    if (atual_L == m_head || atual_L->linha != i) {
-      Node* novaLinha = new Node(i, 0, 0);
-      novaLinha->abaixo = atual_L;
-      prev_L->abaixo = novaLinha;
-      novaLinha->direita = novaLinha;
-      atual_L = novaLinha;
-    }
-    
-    Node* prevElem = atual_L;
-    Node* currElem = atual_L->direita;
-    while (currElem != atual_L && currElem->coluna < j) {
-      prevElem = currElem;
-      currElem = currElem->direita;
-    }
-    if (currElem != atual_L && currElem->coluna == j) {
-      // Se o elemento já existe, atualiza seu valor
-      currElem->valor = value;
-    }
-    else {
-      // Insere um novo nó na posição correta
-      Node* newNode = new Node(i, j, value);
-      newNode->direita = currElem;
-      prevElem->direita = newNode;
-    }
-}
-    // Retorna um valor específico da matriz.
-    double get(int i, int j) const {
-    if (i < 1 || i > linhas || j < 1 || j > colunas) {
-      throw std::out_of_range("Índices fora dos limites da matriz.");
-    }
-    Node* atual_L = m_head->abaixo;
-    while (atual_L != m_head && atual_L->linha < i) {
-        atual_L = atual_L->abaixo;
-    }
-    if (atual_L == m_head || atual_L->linha != i) return 0.0;
-    
-    Node* atual_C = atual_L->direita;
-    while (atual_C != atual_L && atual_C->coluna < j) {
-        atual_C = atual_C->direita;
-    }
-    if (atual_C == atual_L || atual_C->coluna != j) return 0.0;
-    return atual_C->valor;
-}
-    // Exibe a matriz no terminal
-    void print(){
-      for (int i = 1; i <= linhas; i++){
-        for (int j = 1; j <= colunas; j++){
-          double valor = get(i, j);
-          std::cout << valor << " ";
+        // Encontrar ou criar a linha
+        Node* linha_atual = m_head;
+        while (linha_atual->abaixo != m_head && linha_atual->abaixo->linha < i) {
+            linha_atual = linha_atual->abaixo;
         }
-        std::cout << std::endl;
-      }  
-    } 
 
-    //Limpa a matriz, setando todos os seus valores para 0.0.
-    void clear() {
-       // Limpa as linhas
-       Node* rowHead = m_head->abaixo;  
-       while (rowHead != m_head) {      
-           Node* current = rowHead->direita;  
-           while (current != rowHead) {       
-               Node* temp = current;
-               current = current->direita;    
-               delete temp;  
-           }
-           Node* tempRow = rowHead;
-           rowHead = rowHead->abaixo;  
-           delete tempRow;  
-       }
-    
-       // Limpa as colunas
-       Node* colHead = m_head->direita;  
-       while (colHead != m_head) {       
-           Node* current = colHead->abaixo;  
-           while (current != colHead) {       
-               Node* temp = current;
-               current = current->abaixo;    
-               delete temp;  
-           }
-           Node* tempCol = colHead;
-           colHead = colHead->direita;  
-           delete tempCol;  
-       }
-    
-       // Libera o nó sentinela
-       delete m_head;
-    }
+        // Se a linha não existe, cria uma nova linha
+        if (linha_atual->abaixo == m_head || linha_atual->abaixo->linha != i) {
+            Node* nova_linha = new Node(0, 0, 0);
+            nova_linha->linha = linha;
+            nova_linha->abaixo = linha_atual->abaixo;
+            linha_atual->abaixo = nova_linha;
+            linha_atual = nova_linha;
+        }
+
+        // Encontrar ou criar a coluna
+        Node* coluna_atual = linha_atual;
+        while (coluna_atual->direita != linha_atual && coluna_atual->direita->coluna < j) {
+            coluna_atual = coluna_atual->direita;
+        }
+
+        // Se a coluna não existe, insere uma nova coluna
+        if (coluna_atual->direita == linha_atual || coluna_atual->direita->coluna != j) {
+            nova->direita = coluna_atual->direita;
+            coluna_atual->direita = nova;
+        } else {
+            // Se o elemento já existe, apenas atualiza o valor
+            coluna_atual->direita->valor = value;
+            delete nova;
+        }
+      }
   
-};
+      // Função para obter o valor da matriz em uma posição específica
+      double get(int i, int j) {
+          Node* linha = m_head->abaixo;
+          while (linha != m_head && linha->linha < i) {
+              linha = linha->abaixo;
+          }
+  
+          if (linha == m_head || linha->linha != i) {
+              return 0.0;
+          }
+  
+          Node* coluna = linha->direita;
+          while (coluna != linha && coluna->coluna < j) {
+              coluna = coluna->direita;
+          }
+  
+          if (coluna == linha || coluna->coluna != j) {
+              return 0.0;
+          }
+  
+          return coluna->valor;
+      }
+  
+      // Função para imprimir a matriz esparsa
+      void print() {
+        for (int i = 1; i <= linhas; i++){
+          for (int j = 1; j <= colunas; j++){
+            double valor = get(i, j);
+            std::cout << valor << " ";
+          }
+          std::cout << std::endl;
+        }  
+      }
+
+      void clear() {
+        Node* aux = m_head->abaixo;
+        while (aux != m_head) {
+            Node* atual = aux->direita;
+            while (atual != aux) {
+                Node* temp = atual;
+                atual = atual->direita;
+                delete temp;  // Deleta cada nó de dados (elemento da matriz)
+            }
+            Node* temp = aux;
+            aux = aux->abaixo;
+            delete temp;  // Deleta o nó da linha
+        }
+    
+        // Libera o nó cabeça (sentinela)
+        delete m_head;
+        m_head = nullptr;  // Aponta para nullptr para evitar referências pendentes
+      }
+  
+      // Getters para número de linhas e colunas
+      int getLinhas() const {
+         return linhas; 
+      }
+      int getColunas() const {
+         return colunas;
+      }
+  
+      // Função para obter o nó cabeça
+      Node* getHead() const {
+         return m_head; 
+      }
+  };
 
 #endif
+  

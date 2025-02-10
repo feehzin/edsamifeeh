@@ -9,51 +9,35 @@
 using namespace std;
 
 // Função que lê a matriz esparsa de um arquivo
-void readSparseMatrix(SparseMatrix& m, std::string& nome_do_arquivo) {
-  std::ifstream arquivo(nome_do_arquivo);
-  if (!arquivo) {
-      std::cerr << "Erro: não foi possível abrir o arquivo '" << nome_do_arquivo << "'" << std::endl;
-      return;
-  }
-  
-  int linhasArquivo, colunasArquivo;
-  std::string linha;
-  std::getline(arquivo, linha);
-  std::istringstream iss(linha);
-  if (!(iss >> linhasArquivo >> colunasArquivo)) {
-      std::cerr << "Erro: formato inválido no cabeçalho do arquivo '" << nome_do_arquivo << "'" << std::endl;
-      return;
-  }
-  
-  if (linhasArquivo != m.getLinhas() || colunasArquivo != m.getColunas()) {
-      std::cerr << "Erro: Dimensões da matriz no arquivo não correspondem à matriz atual." << std::endl;
-      return;
-  }
-  
-  int i, j;
-  double valor;
-  m.clear(); // Limpa a matriz antes de inserir novos valores
-  while (std::getline(arquivo, linha)) {
-      std::istringstream iss(linha);
-      if (iss >> i >> j >> valor) {
-          if (i < 1 || i > linhasArquivo || j < 1 || j > colunasArquivo) {
-              std::cerr << "Erro: índices fora dos limites." << std::endl;
-              continue;
-          }
-          m.insert(i, j, valor);
-      } else {
-          std::cerr << "Erro: formato inválido na linha do arquivo '" << nome_do_arquivo << "'" << std::endl;
-      }
-  }
-  arquivo.close();
-}
+void ReadSparseMatrix(SparseMatrix*& m, const string& nome_arquivo) {
+    ifstream arquivoLido(nome_arquivo);
 
+    if (!arquivoLido.is_open()) {
+        throw runtime_error("Erro ao abrir o arquivo: " + nome_arquivo);
+    }
+
+    int linhas, colunas;
+    arquivoLido >> linhas >> colunas;
+
+    // Criando a matriz corretamente com as dimensões lidas
+    m = new SparseMatrix(linhas, colunas);
+    cout << "Matriz de " << linhas << "x" << colunas << " lida do arquivo " << nome_arquivo << "." << endl;
+
+    int linha, coluna;
+    double valor;
+    while (arquivoLido >> linha >> coluna >> valor) {
+        cout << "Inserindo valor: linha " << linha << ", coluna " << coluna << ", valor " << valor << endl;
+        m->insert(linha, coluna, valor);
+    }
+
+    arquivoLido.close();
+}
 
 // Função que soma duas matrizes esparsas
 SparseMatrix sum(SparseMatrix& A, SparseMatrix& B) {
     // Verificar se as matrizes são da mesma dimensão
     if (A.getLinhas() != B.getLinhas() || A.getColunas() != B.getColunas()) {
-        throw out_of_range("As matrizes devem ter o mesmo tamanho para a função de soma.");
+        throw out_of_range("As matrizes devem ter o mesmo tamanho para a funcao de soma.");
     }
 
     SparseMatrix C(A.getLinhas(), A.getColunas());
@@ -102,29 +86,34 @@ SparseMatrix sum(SparseMatrix& A, SparseMatrix& B) {
 // Função que multiplica duas matrizes esparsas
 SparseMatrix multiply(SparseMatrix& A, SparseMatrix& B) {
     if (A.getColunas() != B.getLinhas()) {
-        throw out_of_range("O número de colunas de A deve ser igual ao número de linhas de B para executar a multiplicação.");
+        throw out_of_range("O numero de colunas de A deve ser igual ao número de linhas de B para executar a multiplicacao.");
     }
 
     SparseMatrix C(A.getLinhas(), B.getColunas());
 
+    // Para cada linha de A
     for (Node* linha_A = A.getHead()->abaixo; linha_A != A.getHead(); linha_A = linha_A->abaixo) {
+        // Para cada coluna de B (que é uma linha na transposta de B)
         for (Node* element_A = linha_A->direita; element_A != linha_A; element_A = element_A->direita) {
             int i = element_A->linha;
             int j = element_A->coluna;
             double valor_A = element_A->valor;
 
+            // Achar a linha correspondente na matriz B
             Node* coluna_B = B.getHead()->abaixo;
-            while (coluna_B->linha != j && coluna_B != B.getHead()) {
+            while (coluna_B != B.getHead() && coluna_B->linha != j) {
                 coluna_B = coluna_B->abaixo;
             }
 
-            if (coluna_B->linha == j) {
+            if (coluna_B != B.getHead()) { // Coluna B encontrada
                 for (Node* element_B = coluna_B->direita; element_B != coluna_B; element_B = element_B->direita) {
                     int s = element_B->coluna;
                     double valor_B = element_B->valor;
 
                     double valorC = C.get(i, s) + (valor_A * valor_B);
-                    C.insert(i, s, valorC);
+                    if (valorC != 0) {
+                        C.insert(i, s, valorC);
+                    }
                 }
             }
         }
@@ -138,7 +127,7 @@ int main() {
 
     cout << "------- Sistema de Matriz -------" << endl
          << "Digite 'ajuda' para ver a lista de comandos" << endl;
-    
+
     string comando;
 
     while (getline(cin, comando)) {
@@ -147,7 +136,7 @@ int main() {
         ss >> cmd;
 
         if (cmd == "ajuda") {
-            cout << "------------------------------------ Lista de Comandos------------------------------------" << endl
+            cout << "------------------------------------ Lista de Comandos ------------------------------------" << endl
                  << "criar M N................ criar matriz vazia com M linhas e N colunas" << endl
                  << "ler m.txt................ ler arquivo de texto, armazenando seus parametros em uma matriz" << endl
                  << "mostre A................. mostra a matriz A" << endl
@@ -168,67 +157,53 @@ int main() {
                 matriz.push_back(novaMatriz);
                 cout << "Matriz " << matriz.size() - 1 << " adicionada com sucesso!" << endl;
             } else {
-                cerr << "Erro: Dimensões da matriz são inválidas!" << endl;
+                cerr << "Erro: Dimensoes da matriz sao invalidas!" << endl;
             }
         } else if (cmd == "ler") {
             string nomeArquivo;
             ss >> nomeArquivo;
+            SparseMatrix* novaMatriz = nullptr;  // Ponteiro para a nova matriz
+            ReadSparseMatrix(novaMatriz, nomeArquivo);
             
-            int linhas, colunas;
-            ifstream arquivo(nomeArquivo);
-            if (!arquivo.is_open()) {
-                cerr << "Erro: não foi possível abrir o arquivo " << nomeArquivo << endl;
-                continue;
+            if (novaMatriz) {
+                matriz.push_back(novaMatriz);
+                cout << "Matriz lida do arquivo '" << nomeArquivo << "' adicionada ao sistema com sucesso!" << endl;
+            } else {
+                cerr << "Erro: Falha ao criar matriz a partir do arquivo!" << endl;
             }
-
-            arquivo >> linhas >> colunas;
-            arquivo.close();
-
-            SparseMatrix m(linhas, colunas);
-            readSparseMatrix(m, nomeArquivo);
-            matriz.push_back(m);
-
-            cout << "Nova matriz, com parâmetros do arquivo (" << nomeArquivo << ") listada no sistema com sucesso!" << endl;
-        } else if (cmd == "mostre") {
+        }
+        else if (cmd == "mostre") {
             int A;
             ss >> A;
 
             if (A >= 0 && A < matriz.size()) {
                 matriz[A].print();
             } else {
-                cerr << "Erro: A matriz com o índice passado não foi encontrada no sistema." << endl;
+                cerr << "Erro: A matriz com o indice passado não foi encontrada no sistema." << endl;
             }
         } else if (cmd == "somar") {
             int A, B;
             ss >> A >> B;
 
             if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()) {
-                try {
-                    SparseMatrix resultado = sum(matriz[A], matriz[B]);
-                    matriz.push_back(resultado);
-                    cout << "Resultado da soma:" << endl;
-                    matriz.back().print();
-                } catch (const out_of_range& e) {
-                    cerr << "Erro: " << e.what() << endl;
-                }
+                SparseMatrix resultado = sum(matriz[A], matriz[B]);
+                matriz.push_back(resultado);
+                cout << "Resultado da soma:" << endl;
+                matriz.back().print();
             } else {
-                cerr << "Erro: Índices inválidos para soma!" << endl;
+                cerr << "Erro: Indices inválidos para soma!" << endl;
             }
         } else if (cmd == "multi") {
             int A, B;
             ss >> A >> B;
 
             if (A >= 0 && A < matriz.size() && B >= 0 && B < matriz.size()) {
-                try {
-                    SparseMatrix resultado = multiply(matriz[A], matriz[B]);
-                    matriz.push_back(resultado);
-                    cout << "Resultado da multiplicação:" << endl;
-                    matriz.back().print();
-                } catch (const out_of_range& e) {
-                    cerr << "Erro: " << e.what() << endl;
-                }
+                SparseMatrix resultado = multiply(matriz[A], matriz[B]);
+                matriz.push_back(resultado);
+                cout << "Resultado da multiplicacaoo:" << endl;
+                matriz.back().print();
             } else {
-                cerr << "Erro: Índices inválidos para multiplicação!" << endl;
+                cerr << "Erro: Indices inválidos para multiplicacao!" << endl;
             }
         } else if (cmd == "mudar") {
             unsigned A, i, j;
@@ -239,7 +214,7 @@ int main() {
                 matriz[A].insert(i, j, valor);
                 cout << "Valor atualizado na matriz[" << A << "] com sucesso!" << endl;
             } else {
-                cerr << "Erro: Dados passados não correspondem a nenhuma matriz ou posição válida!" << endl;
+                cerr << "Erro: Dados passados não correspondem a nenhuma matriz ou posicao valida!" << endl;
             }
         } else if (cmd == "limpar") {
             int A;
@@ -249,17 +224,22 @@ int main() {
                 matriz.erase(matriz.begin() + A);
                 cout << "Matriz[" << A << "] removida com sucesso!" << endl;
             } else {
-                cerr << "Erro: Índice inválido!" << endl;
+                cerr << "Erro: indice invalido!" << endl;
             }
         } else if (cmd == "limparM") {
             if (matriz.empty()) {
-                cout << "Não há matrizes para limpar." << endl;
+                cout << "Nao ha matrizes para limpar." << endl;
             } else {
                 matriz.clear();
                 cout << "Todas as matrizes foram removidas do sistema!" << endl;
             }
         } else if (cmd == "listar") {
-            for (unsigned i = 0; i < matriz.size(); i++) {
+            if (matriz.empty()) {
+                cout << "Nao ha matrizes listadas no sistema!" << endl;
+                continue;
+            }
+
+            for (int i = 0; i < matriz.size(); i++) {
                 cout << "Matriz[" << i << "]:" << endl;
                 matriz[i].print();
                 cout << endl;
